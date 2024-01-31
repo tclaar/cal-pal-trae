@@ -1,6 +1,6 @@
 # CalPal
 
-## By Trae Claar, Devin Peevy, Abdel Rahman Abudayyah, and Jason Sizemore
+By Trae Claar, Devin Peevy, Abdel Rahman Abudayyah, and Jason Sizemore
 
 ## Overview
 CalPal is a very versatile calendar/scheduling web application. We as developers understand that it's nearly impossible to build an app that will satisfy everybody - so we did our best to make sure that the user is able to shape the application to suit their needs, and nothing more!<br><br>
