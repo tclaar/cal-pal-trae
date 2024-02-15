@@ -18,7 +18,7 @@ function CalendarSelect() {
 
     return (
         <>
-            <div id="calSelect" className="dropdown-menu show" style={{}}>
+            <div id="calSelect" className="dropdown-menu show">
                 <h5 className="dropdown-header">
                     Calendars
                     {/* the add calendar button */}
