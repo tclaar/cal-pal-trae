@@ -1,21 +1,22 @@
 import React from 'react';
+import { Link } from 'react-router-dom';
 
 function NavBar() {
   return (
     <footer className="navbar fixed-bottom navbar-light bg-light">
       <nav className="nav nav-fill w-100">
-        <a className="nav-link" href="#month">
+        <Link className="nav-link" to="/month/">
           Month
-        </a>
-        <a className="nav-link" href="#week">
+        </Link>
+        <Link className="nav-link" to="/">
           Week
-        </a>
-        <a className="nav-link" href="#messages">
+        </Link>
+        <Link className="nav-link" to="/messages/">
           Messages
-        </a>
-        <a className="nav-link" href="#settings">
+        </Link>
+        <Link className="nav-link" to="/settings/">
           Settings
-        </a>
+        </Link>
       </nav>
     </footer>
   );
