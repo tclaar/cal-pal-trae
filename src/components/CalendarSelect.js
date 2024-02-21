@@ -1,9 +1,9 @@
 import './css/CalendarSelect.css';
-import React from "react";
+import React, {useContext}from "react";
+import {CalendarContext} from '../App';
 
 function CalendarSelect() {
-    // TODO: replace this demo list, probably with global context
-    const calendars = ["Appointments", "Birthdays", "Homework"]
+    const [calendars, setCalendars] = useContext(CalendarContext);
 
     // react to the add calendar button being clicked
     function addCalendar() {
@@ -12,8 +12,9 @@ function CalendarSelect() {
 
     // react to a calendar checkbox being changed
     function setShowCalendar(e) {
-        // TODO: fill in functionality, likely change global context for visible calendars
-        //console.log(e.target.value + ": " + e.target.checked);
+        const newCals = JSON.parse(JSON.stringify(calendars));
+        newCals[e.target.value].visible = e.target.checked;
+        setCalendars(newCals);
     }
 
     return (
@@ -27,19 +28,20 @@ function CalendarSelect() {
                 
                 <div className="dropdown-divider"></div>
                 {/* create a checkbox for each calendar */}
-                {calendars.map((calendarName) => {
+                {Object.keys(calendars).map((key) => {
                     return (
-                        <div className="dropdown-item form-check" key={calendarName}>
-                            <label className="form-check-label" htmlFor={calendarName + "CalendarCheck"}>
-                                {calendarName}
+                        <div className="dropdown-item form-check" key={key}>
+                            <label className="form-check-label" htmlFor={key + "CalendarCheck"}>
+                                {calendars[key].name}
                             </label>
                             <input 
                                 className="form-check-input" 
                                 type="checkbox" 
-                                value={calendarName} 
-                                id={calendarName + "CalendarCheck"} 
+                                value={key} 
+                                id={key + "CalendarCheck"} 
                                 style={{float: "right"}} 
-                                onChange={setShowCalendar}/>
+                                onChange={setShowCalendar}
+                                checked={calendars[key].visible}/>
                         </div>
                     )
                 })}      
