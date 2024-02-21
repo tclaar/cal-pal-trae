@@ -6,7 +6,7 @@ function App() {
     <div>
       
       <h1>CalPal</h1>
-     
+  
       <NavBar />
     </div>
   );
