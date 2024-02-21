@@ -1,0 +1,22 @@
+#calSelect {
+    position: absolute;
+    right: 0;
+    border-radius: 0;
+    width: 16em;
+    height: 100%;
+}
+
+#addCal {
+    display: inline-block;
+    margin-left: 10px;
+    height: 1.7rem;
+    width: 1.7rem;
+    font-size: 2rem;
+    padding: 0;
+    line-height: 1.7rem;
+   
+}
+
+.dropdown-header {
+    font-size: 1.25rem;
+}
