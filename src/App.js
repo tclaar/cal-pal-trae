@@ -6,6 +6,7 @@ import { BrowserRouter, Routes, Route } from "react-router-dom"
 import Header from './components/Header';
 import NavBar from './components/NavBar';
 import WeekView from './components/WeekView';
+import Settings from './components/Settings';
 
 export const CalendarContext = createContext(null);
 
@@ -56,7 +57,7 @@ function App() {
               <Route path="/month/" element={<h1>Month</h1>} />
               <Route path="/" element={<WeekView />} />
               <Route path="/messages/" element={<h1>Messages</h1>} />
-              <Route path="/settings/" element={<h1>Settings</h1>} />
+              <Route path="/settings/" element={<Settings /> } />
             </Routes>
           </div>
           <NavBar />
