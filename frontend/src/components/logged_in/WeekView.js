@@ -2,10 +2,10 @@
 // WeekView.js
 // Trae Claar
 
-import './css/WeekView.css';
+import '../css/WeekView.css';
 
 import React, {useState, useContext} from 'react';
-import {CalendarContext} from '../App';
+import {CalendarContext} from './LoggedInWrapper';
 
 function WeekView() {
     // date object for today's date
