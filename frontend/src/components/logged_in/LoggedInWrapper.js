@@ -1,15 +1,20 @@
-import './App.css';
+import '../css/CalendarSelect.css';
+import '../css/WeekView.css';
 
-import { useState, createContext } from 'react';
-import { BrowserRouter, Routes, Route } from "react-router-dom"
+import { createContext, useContext, useState } from 'react';
+import { BrowserRouter, Routes, Route } from 'react-router-dom';
 
-import Header from './components/Header';
-import NavBar from './components/NavBar';
-import WeekView from './components/WeekView';
+import { UserContext } from '../../App';
+import WeekView from './WeekView';
+import Header from './Header';
+import NavBar from './NavBar';
 
-export const CalendarContext = createContext(null);
+const CalendarContext = createContext(null);
 
-function App() {
+const LoggedInWrapper = () => {
+
+  const { userState, setUserState } = useContext(UserContext);
+  console.log(userState);
 
   // demo data
   const calCtxValue = { 
@@ -76,6 +81,7 @@ function App() {
       </BrowserRouter>
     </>
   );
-}
+};
 
-export default App;
+export default LoggedInWrapper;
+export { CalendarContext };

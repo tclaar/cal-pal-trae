@@ -1,6 +1,6 @@
-import './css/CalendarSelect.css';
+import '../css/CalendarSelect.css';
 import React, {useContext}from "react";
-import {CalendarContext} from '../App';
+import {CalendarContext} from './LoggedInWrapper';
 
 function CalendarSelect() {
     const [calendars, setCalendars] = useContext(CalendarContext);
