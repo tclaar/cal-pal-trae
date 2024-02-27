@@ -12,7 +12,7 @@
     float: right;
 }
 
-.add-event {
+.add-event, .map-btn {
     display: inline-block;
     margin-left: 10px;
     height: 1.5rem;
@@ -30,8 +30,22 @@
     float: right;
 }
 
+.field-text {
+    display: inline;
+    font-size: 14px;
+}
+
+.map-btn img {
+    height: 1rem;
+    margin-bottom: 0.4rem;
+}
+
 #day-list {
     height: calc(100vh - 13.375rem);
     overflow: hidden;
     overflow-y: scroll;
+}
+
+#today {
+    font-weight: 600;
 }

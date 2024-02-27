@@ -41,6 +41,18 @@ function App() {
         }
       ],
       visible: true
+    },
+    '3': {
+      name: "Classes",
+      events: [
+        {
+          name: "tcss 460",
+          date_range: [ '2024-02-22' ],
+          time_range: [ '1:30 PM' ],
+          location: "UW Tacoma"
+        }
+      ],
+      visible: true
     }
   }
 
