@@ -3,6 +3,7 @@
 // Trae Claar
 
 import '../css/WeekView.css';
+import '../../images/maps-icon.png'
 
 import React, {useState, useContext} from 'react';
 import {CalendarContext} from './LoggedInWrapper';
@@ -149,7 +150,7 @@ function Day({ date }) {
 
     return (
         <>
-            <h6>{
+            <h6 id={(date.toDateString() === new Date().toDateString()) ? "today" : ""}>{
                 date.toLocaleString("default", {weekday: "long"}) + " "
                     + date.toLocaleString("default", {month: "short"}) + " "
                     + date.getDate()}
@@ -189,6 +190,36 @@ function Event({ event }) {
             <div className="container">
                 <p className="evt-header text-body-secondary">{event.name + timeRangeString()}</p>
                 <p className="evt-cal text-body-secondary">{event.calendarName}</p>
+                {event.location && <LocationField location={event.location} />}
+            </div>
+        </>
+    )
+}
+
+function LocationField({ location }) {
+    const [showMap, setShowMap] = useState(false);
+
+    return (
+        <>
+            <div>
+                <p className="field-text text-body-secondary">Location: {location}</p>
+                <button
+                    className="map-btn btn btn-outline-secondary" 
+                    type="button" 
+                    onClick={() => setShowMap(!showMap)}>
+
+                    <img src={require('../images/maps-icon.png')}></img>
+                </button>
+                {/* This currently yields a warning regarding loading the API directly, 
+                    so there is likely a better way to do this. It works for now though. */}
+                {showMap && <iframe
+                    width="300px"
+                    height="300px"
+                    style={{display: "block", margin: "10px"}}
+                    loading="lazy"
+                    src={`https://www.google.com/maps/embed/v1/place?key=AIzaSyCL7h3KXCa-vKkb9e-K32pYLSD6-ZrtzEs
+                            &q=${location}`}>
+                </iframe>}
             </div>
         </>
     )
