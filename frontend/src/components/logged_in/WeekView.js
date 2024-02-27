@@ -208,7 +208,7 @@ function LocationField({ location }) {
                     type="button" 
                     onClick={() => setShowMap(!showMap)}>
 
-                    <img src={require('../images/maps-icon.png')}></img>
+                    <img src={require('../../images/maps-icon.png')}></img>
                 </button>
                 {/* This currently yields a warning regarding loading the API directly, 
                     so there is likely a better way to do this. It works for now though. */}
