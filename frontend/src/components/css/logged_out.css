@@ -1,0 +1,42 @@
+.welcomeButtons {
+  width: 80%;
+  min-width: fit-content;
+  margin: 10px auto;
+  display: block;
+}
+
+.welcomeButtons button {
+  display: block;
+  width: 100%;
+  max-width: 600px;
+  margin: 10px auto;
+}
+
+.welcome-logo {
+  height: 50%;
+  margin: 10px auto;
+  display: block;
+}
+
+#login-form {
+  width: 80%;
+  display: block;
+  margin: auto;
+  max-width: 600px;
+  display: flex;
+  flex-direction: column;
+  height: 100vh;
+  justify-content: space-evenly;
+}
+
+#login-form img {
+  max-height: 50%;
+  margin: 20px auto;
+}
+
+#login-form button {
+  display: block;
+  width: 50%;
+  max-width: 300px;
+  margin: 20px auto;
+}
