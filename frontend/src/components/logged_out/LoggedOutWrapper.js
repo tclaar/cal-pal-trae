@@ -40,7 +40,7 @@ const LoggedOutWrapper = () => {
       const username = loginState.input.un.trim();
       const password = loginState.input.pw.trim();
       // Address to our login web service.
-      const uri = encodeURI("http://localhost:2000/user/login");
+      const uri = encodeURI("http://localhost:2000/user/auth");
       // Do the job!
       const response = await fetch(uri, {
         method: "POST",
@@ -48,8 +48,8 @@ const LoggedOutWrapper = () => {
           "Content-Type": "application/json"
         },
         body: JSON.stringify({
-          username: username,
-          password: password
+          un: username,
+          pw: password
         })
       });
       // This is the object that we want, which holds all the info about
