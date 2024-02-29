@@ -37,16 +37,20 @@ const LoggedOutWrapper = () => {
   useEffect(() => {
     /** Calls our login API. */
     const attemptLogin = async () => {
-      const username = loginState.input.un;
-      const password = loginState.input.pw;
+      const username = loginState.input.un.trim();
+      const password = loginState.input.pw.trim();
       // Address to our login web service.
-      const uri = encodeURI(`http://localhost:2000/${username}/${password}`);
+      const uri = encodeURI("http://localhost:2000/user/login");
       // Do the job!
       const response = await fetch(uri, {
         method: "POST",
         headers: {
           "Content-Type": "application/json"
-        }
+        },
+        body: JSON.stringify({
+          username: username,
+          password: password
+        })
       });
       // This is the object that we want, which holds all the info about
       // the correctness of login info.
@@ -62,7 +66,7 @@ const LoggedOutWrapper = () => {
       } else if (obj.success) {
         // Logging in has been successful! You're gonna finish this request, then you're going to call
         // the next API to retrieve public user information.
-        const uri2 = encodeURI(`http://localhost:2000/${username}`);
+        const uri2 = encodeURI(`http://localhost:2000/user/${username}`);
         // Do the job!
         const response2 = await fetch(uri2, {
           method: "GET",
