@@ -15,5 +15,4 @@ const usersConnection = mongoose.createConnection(uri("users"));
 
 module.exports = {
   usersConnection,
-  eventsConnection,
 }
