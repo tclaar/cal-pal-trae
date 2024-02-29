@@ -6,8 +6,8 @@
 /.pnp
 .pnp.js
 
-# authentication
-/backend/login_info.json
+# config
+/backend/config
 
 # testing
 /coverage
@@ -25,3 +25,4 @@
 npm-debug.log*
 yarn-debug.log*
 yarn-error.log*
+node_modules
