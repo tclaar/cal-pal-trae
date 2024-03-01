@@ -12,7 +12,9 @@ function uri(dbName) {
 
 // Connections
 const usersConnection = mongoose.createConnection(uri("users"));
+const eventsConnection = mongoose.createConnection(uri("events"));
 
 module.exports = {
   usersConnection,
+  eventsConnection,
 }
