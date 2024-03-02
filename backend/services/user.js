@@ -1,64 +1,39 @@
-// Import external libraries.
-const express = require('express');
-const mongoose = require("mongoose");
-const cors = require("cors");
-// Import mongoose model for login info
-const LoginModel = require("./models/login_model");
-const PublicUserModel = require("./models/public_user_model");
-// Import your own username/password for MongoDB connection string.
-const mongoLogin = require("./login_info.json");
+// Import express router for HTTP requests.
+const router = require("express").Router();
+// Import mongoose model for user info
+const UserModel = require("../models/user_model");
 
-// Create an express application instance.
-const app = express();
-
-// Parse any request bodies into JSON instead of string.
-app.use(express.json());
-
-// Enable cross origin request from any origin.
-app.use(cors());
-
-// Connect to MongoDB:
-
-// Connection string to database: users.
-// NOTE: replace <username> and <password> with your own to run.
-const uri = `mongodb+srv://${mongoLogin.un}:${mongoLogin.pw}@cal-pal-cluster.qvdyrdk.mongodb.net/users?retryWrites=true&w=majority`;
-// Should we connect to the same port with every db? Probably not, but I'm not sure.
-const users_port = 2000;
-
-mongoose.connect(uri);
-
-// Get the username and password from the database.
-let username;
-let password;
+const { hash, generateSalt } = require("../hashing");
 
 // This must be a post method!
 // If it was get, the username and password would show up in the
 // console - obviously horrible.
-app.post("/:username/:password", async (req, res) => {
+router.post("/auth", async (req, res) => {
   try {
     // We're gonna search by username, as a username is unique -
     // Passwords could potentially be the same.
 
-    // Make sure there is a username to search for.
-    const username = req.params.username;
-    if (!username) {
+    // Make sure there is a body containing a username and password.
+    if (!(req.body && req.body.un && req.body.pw)) {
       return res.status(400).json({
-        error: "Username is a required field! Please try again."
+        error: "Body containing username and password is required."
       });
     }
+    const username = req.body.un;
 
     // Perform a search - must be an exact match!
     const regex = new RegExp(`^${username}$`);
 
     // This will bring in the correct username/password combination,
     // IF the username exists in the database.
-    const correctLogin = await LoginModel.find({
+    const correctLogin = await UserModel.findOne({
       username: regex 
     });
     // If the username does NOT exist in our database, return a 404 Page Not Found.
-    if (correctLogin.length === 0) {
+    // A generic error message is used to avoid leaking the existence of a valid username.
+    if (!correctLogin) {
       return res.status(404).json({
-        error: "That username does not exist in our records - please try again."
+        error: "That username or password is incorrect."
       });
     }
 
@@ -66,16 +41,20 @@ app.post("/:username/:password", async (req, res) => {
     // correctLogin stores the valid data.
     
     // Check passwords.
-    const password = req.params.password;
-    if (correctLogin[0].password === password) {
+    const password = req.body.pw;
+    if (correctLogin.password === hash(password, correctLogin.salt)) {
       // Username and password match! Success!
+
+      req.session.userID = correctLogin._id;
+
       return res.status(200).json({
         success: true
       });
     } else {
       // The password was incorrect.
+      // A generic error message is used to avoid leaking the existence of a valid username.
       return res.status(404).json({
-        error: "The username and password do not match. Please try again."
+        error: "That username or password is incorrect."
       });
     }
   } catch (error) {
@@ -86,10 +65,42 @@ app.post("/:username/:password", async (req, res) => {
   }
 });
 
-// Route 2: Get the public user information by searching them by username.
+router.post("/new", async (req, res) => {
+  try {
+    // Make sure there is a body containing the required fields.
+    if (!(req.body && req.body.username && req.body.password && req.body.email)) {
+      return res.status(400).json({
+        error: "Body containing username, password, and email is required."
+      });
+    }
+
+    if (await UserModel.exists({ username: req.body.username })) {
+      return res.status(409).json({ error: "Username " + req.body.username + " is already taken." });
+    }
+
+    const salt = generateSalt();
+    req.body.password = hash(req.body.password, salt);
+    req.body.salt = salt;
+
+    const user = new UserModel(req.body);
+    await user.save();
+
+    req.session.userID = user._id;
+
+    return res.status(201);
+
+  } catch (error) {
+    console.error(`Error: ${error}`);
+    res.status(500).json({
+      error: "There has been an error creating the account."
+    });
+  }
+});
+
+// Route 3: Get the public user information by searching them by username.
 // This is their username, name, and email, for now.
 // Note: this seems trivial as far as logging in goes, BUT it has future implications: adding friends, for example.
-app.get("/:username", async (req, res) => {
+router.get("/:username", async (req, res) => {
   try {
     // We're gonna search by username, as a username is unique -
     // Passwords could potentially be the same.
@@ -107,10 +118,10 @@ app.get("/:username", async (req, res) => {
 
     // This will bring in the correct username/password combination,
     // IF the username exists in the database.
-    const user = await PublicUserModel.find({
+    const user = await UserModel.findOne({
       username: regex 
     });
-    if (user.length === 0) {
+    if (!user) {
       return res.status(404).json({
         error: `User ${username} does not exist. Please try again.`
       });
@@ -119,7 +130,9 @@ app.get("/:username", async (req, res) => {
     // If we've gotten here, the username was correct! Now,
     // return the public user data.
     res.status(200).json({
-      user: user[0]
+      id: user._id,
+      username: user.username,
+      email: user.email
     });
 
   } catch (error) {
@@ -130,6 +143,4 @@ app.get("/:username", async (req, res) => {
   }
 });
 
-app.listen(users_port, () => {
-  console.log(`Server listening on port ${users_port}`)
-});
+module.exports = router;

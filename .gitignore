@@ -6,8 +6,8 @@
 /.pnp
 .pnp.js
 
-# authentication
-/backend/login_info.json
+# config
+/backend/config
 
 # testing
 /coverage
