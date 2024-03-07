@@ -7,8 +7,8 @@ const LoginScreen = () => {
   const validateInput = (event) => {
     event.preventDefault();
     // Get the user input:
-    const username = document.getElementById("usernameField").value;
-    const password = document.getElementById("passwordField").value;
+    const username = document.getElementById("usernameField").value.trim();
+    const password = document.getElementById("passwordField").value.trim();
 
     // The only check that I'm gonna do on this end is make sure that there has been provided both a username and a password.
     if (username.length === 0 || password.length === 0) {
