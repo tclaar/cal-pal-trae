@@ -81,7 +81,10 @@ const LoggedOutWrapper = () => {
         console.log("Updating UserContext");
         setUserState({
           ...obj2,
-          loggedIn: true
+          loggedIn: true,
+          calendars: [
+            "65e78634451a8fd7eb403bfe",
+          ]
         });
       }
     };

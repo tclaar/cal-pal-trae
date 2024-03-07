@@ -1,80 +1,63 @@
 import '../css/CalendarSelect.css';
 import '../css/WeekView.css';
 
-import { createContext, useContext, useState } from 'react';
+import { createContext, useContext, useState, useEffect } from 'react';
 import { BrowserRouter, Routes, Route } from 'react-router-dom';
 
 import { UserContext } from '../../App';
 import WeekView from './WeekView';
 import Header from './Header';
 import NavBar from './NavBar';
+import NewEvent from './NewEvent';
+import EditEvent from './EditEvent';
 
 const CalendarContext = createContext(null);
+const EventContext = createContext(null);
 
 const LoggedInWrapper = () => {
 
   const { userState, setUserState } = useContext(UserContext);
-  console.log(userState);
 
-  // demo data
-  const calCtxValue = { 
-    '1': {
-      name: "Appointments",
-      events: [
-        // event list could be populated with event objects fetched using the event ID list 
-        // contained in the response from the calendar web service
-        {
-          name: "Dentist",
-          date_range: [ '2024-02-20', '2024-02-28' ],
-          time_range: [ '9:00 AM', '11:30 AM' ]
-        },
-        {
-          name: "DMV",
-          date_range: [ '2024-02-21', ],
-          time_range: [ '9:00 AM' , '10:00 AM']
-        }
-      ],
-      visible: true
-    },
-    '2': {
-      name: "Meals",
-      events: [
-        {
-          name: "tacos",
-          date_range: [ '2024-02-20' ],
-          time_range: [ ]
-        }
-      ],
-      visible: true
-    },
-    '3': {
-      name: "Classes",
-      events: [
-        {
-          name: "tcss 460",
-          date_range: [ '2024-02-22' ],
-          time_range: [ '1:30 PM' ],
-          location: "UW Tacoma"
-        }
-      ],
-      visible: true
+  const [calendars, setCalendars] = useState({});
+  const [event, setEvent] = useState(null);
+
+  async function refreshCalendars() {
+    try {
+      const newCalendars = {};
+      for (const id of userState.calendars) {
+        const response = await fetch(`http://localhost:2000/calendar/${id}`, {
+          method: "GET"
+        });
+        const calendar = (await response.json()).calendar;
+        calendar.visible = true;
+        newCalendars[id] = calendar;
+      }
+      setCalendars(newCalendars);
+    } catch (error) {
+      console.error("Unable to fetch calendars: " + error);
     }
   }
 
-  const [calendars, setCalendars] = useState(calCtxValue);
+  useEffect(() => {
+    refreshCalendars();
+  }, [])
 
   return (
     <>
       <BrowserRouter>
-        <CalendarContext.Provider value={[calendars, setCalendars]}>
+        <CalendarContext.Provider value={[calendars, setCalendars, refreshCalendars]}>
           <Header/>
           <div className="container">
-            <Routes>
-              <Route path="/month/" element={<h1>Month</h1>} />
-              <Route path="/" element={<WeekView />} />
-              <Route path="/messages/" element={<h1>Messages</h1>} />
-              <Route path="/settings/" element={<h1>Settings</h1>} />
-            </Routes>
+            <EventContext.Provider value={[event, setEvent]}>
+              <Routes>
+                <Route path="/month/" element={<h1>Month</h1>} />
+                <Route path="/" element={<WeekView />} />
+                <Route path="/edit-event" element={<EditEvent />} />
+                <Route path="/new-event" element={<NewEvent />} />
+                <Route path="/messages/" element={<h1>Messages</h1>} />
+                <Route path="/settings/" element={<h1>Settings</h1>} />
+              </Routes>
+            </EventContext.Provider>
           </div>
           <NavBar />
         </CalendarContext.Provider>
@@ -84,4 +67,4 @@ const LoggedInWrapper = () => {
 };
 
 export default LoggedInWrapper;
-export { CalendarContext };
+export { CalendarContext, EventContext };
