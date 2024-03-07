@@ -5,12 +5,161 @@ info:
   title: cal-pal-api
   description: The API for CalPal, application for TCSS 460 Winter 2024
 paths:
+  /auth:
+    post:
+      tags:
+        - authentication
+      description: checks username and password for a match with database records.
+      operationId: authenticate
+      parameters:
+        - in: query
+          name: login
+          schema:
+            $ref: '#/components/schemas/Login'
+          required: true
+          description: login to be authenticated.
+      responses:
+        '200':
+          description: authentication successful
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/SuccessResponse'
+        '400':
+          description: authentication failed - bad request.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        '401':
+          description: authentication failed - input does not match our records.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        '500':
+          description: authentication failed - internal server error.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
   /user:
+    post:
+      tags:
+        - user
+      description: create a new user account.
+      operationId: createUser
+      parameters:
+        - in: query
+          name: user
+          type: object
+          $ref: '#/components/schemas/User'
+      responses:
+        '201':
+          description: account creation success.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/SuccessResponse'
+        '400':
+          description: account creation failure - bad body.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        '403':
+          description: account creation failure - username already exists.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        '500':
+          description: account creation failure - internal server error.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+    delete:
+      tags:
+        - user
+      description: deletes a user from the database.
+      operationId: deleteUser
+      parameters:
+        - in: query
+          name: login
+          type: object
+          $ref: '#/components/schemas/Login'
+      responses:
+        '200':
+          description: account deletion successful.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/SuccessResponse'
+        '400':
+          description: account deletion failure - bad request.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        '401':
+          description: account deletion failure - authentication failed.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        '500':
+          description: account deletion failure - internal server error.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+    put:
+      tags:
+        - user
+      description: update the data stored with a user that already exists.
+      operationId: updateUser
+      parameters:
+        - in: query
+          name: login
+          schema:
+            $ref: '#/components/schemas/Login'
+        - in: query
+          name: changes
+          schema:
+            type: object
+          required: true
+      responses:
+        '200':
+          description: update success.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/SuccessResponse'
+        '400':
+          description: update failure - bad request.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        '401':
+          description: update failure - authentication failed.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        '500':
+          description: update failure - internal server error.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+  /user/{un}:
     get:
       tags:
         - user
-      description: Search for usernames
-      operationId: searchUsers
+      description: Search for users by username. Search is non-strict and case insenstitive ("B1G" will turn up "b1gd3vd0g").
+      operationId: searchByUsername
       parameters:
         - in: path
           name: un
@@ -39,168 +188,6 @@ paths:
                 $ref: '#/components/schemas/ErrorResponse'
         '500':
           description: internal server error
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/ErrorResponse'
-    post:
-      tags:
-        - user
-      description: Create a new User account.
-      operationId: addNewUser
-      parameters:
-        - in: query
-          name: user
-          type: object
-          $ref: '#/components/schemas/User'
-      responses:
-        '201':
-          description: new user created
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/SuccessResponse'
-        '400':
-          description: bad request - check body parameters
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/ErrorResponse'
-        '403':
-          description: you cannot create an account with a username which already exists
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/ErrorResponse'
-        '500':
-          description: internal server error
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/ErrorResponse'
-    delete:
-      tags:
-        - user
-      description: delete a user from the database - if the username and password can be authenticated.
-      operationId: deleteUser
-      parameters:
-        - in: query
-          name: un
-          description: username of user to delete
-          schema:
-            type: string
-          required: true
-        - in: query
-          name: pw
-          description: password of user to delete
-          schema:
-            type: string
-          required: true
-      responses:
-        '200':
-          description: user deleted
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/SuccessResponse'
-        '400':
-          description: bad request - check body parameters
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/ErrorResponse'
-        '401':
-          description: authentication failed
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/ErrorResponse'
-        '500':
-          description: internal server error
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/ErrorResponse'
-    put:
-      tags:
-        - user
-      description: update a users information. requires login if you want to change password.
-      operationId: updateUser
-      parameters:
-        - in: query
-          name: un
-          schema:
-            type: string
-          required: true
-        - in: query
-          name: changes
-          schema:
-            type: object
-          required: true
-        - in: query
-          name: pw
-          schema:
-            type: string
-          required: false
-      responses:
-        '200':
-          description: user updated
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/SuccessResponse'
-        '400':
-          description: bad request - check body parameters
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/ErrorResponse'
-        '401':
-          description: authentication failed
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/ErrorResponse'
-        '500':
-          description: internal server error
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/ErrorResponse'
-  /user/auth:
-    post:
-      tags:
-        - user
-      description: checks username and password for a match with database records.
-      operationId: authenticate
-      parameters:
-        - in: query
-          name: login
-          schema:
-            $ref: '#/components/schemas/Login'
-          required: true
-          description: login to be authenticated.
-      responses:
-        '200':
-          description: Login has been successful!
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/SuccessResponse'
-        '400':
-          description: Bad request! Check body parameters!
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/ErrorResponse'
-        '401':
-          description: Login unsuccessful - bad login
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/ErrorResponse'
-        '500':
-          description: Internal server error!
           content:
             application/json:
               schema:
@@ -325,16 +312,19 @@ components:
     User:
       type: object
       properties:
-        calendars:
-          type: array
-          items:
-            type: object
-            $ref: '#/components/schemas/Calendar'
-          description: this user's calendars
+        email: 
+          type: string
+          description: the email address associated with this user account.
+        _id:
+          type: object
+          description: the mongodb id.
         login:
           type: object
           $ref: '#/components/schemas/Login'
           description: this user's login
+        phone:
+          type: number
+          description: the phone number associated with this user account.
         preferences:
           type: object
           $ref: '#/components/schemas/Preferences'
