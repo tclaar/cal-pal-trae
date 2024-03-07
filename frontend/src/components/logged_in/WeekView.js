@@ -3,7 +3,9 @@
 // Trae Claar
 
 import '../css/WeekView.css';
-import '../../images/maps-icon.png'
+import '../../images/maps-icon.png';
+
+import mapAPIKey from "../../config/map_api_key.json";
 
 import React, {useState, useContext} from 'react';
 import {CalendarContext} from './LoggedInWrapper';
@@ -217,7 +219,7 @@ function LocationField({ location }) {
                     height="300px"
                     style={{display: "block", margin: "10px"}}
                     loading="lazy"
-                    src={`https://www.google.com/maps/embed/v1/place?key=AIzaSyCL7h3KXCa-vKkb9e-K32pYLSD6-ZrtzEs
+                    src={`https://www.google.com/maps/embed/v1/place?key=${mapAPIKey.key}
                             &q=${location}`}>
                 </iframe>}
             </div>
