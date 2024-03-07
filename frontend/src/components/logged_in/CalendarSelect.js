@@ -1,5 +1,5 @@
 import '../css/CalendarSelect.css';
-import React, {useContext}from "react";
+import React, { useContext }from "react";
 import {CalendarContext} from './LoggedInWrapper';
 
 function CalendarSelect() {

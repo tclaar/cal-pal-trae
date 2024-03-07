@@ -24,6 +24,9 @@ app.use(session({
 const users_port = 2000;
 
 app.use("/user", require("./services/user.js"));
+app.use("/calendar", require("./services/calendar.js"));
+app.use("/event", require("./services/event.js"));
+app.use("/event/type", require("./services/event_type.js"));
 
 app.listen(users_port, () => {
     console.log(`Server listening on port ${users_port}`)
