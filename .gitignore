@@ -8,6 +8,7 @@
 
 # config
 /backend/config
+/frontend/src/config
 
 # testing
 /coverage
