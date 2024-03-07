@@ -9,6 +9,14 @@ function uri(dbName) {
 const userConnection = mongoose.createConnection(uri('users'));
 const User = userConnection.model('User', require('./schema/user_schema'));
 
+const dbConnection = mongoose.createConnection(uri('cal-pal-test-1'));
+const Calendar = dbConnection.model('Calendar', require('./schema/calendar_schema'));
+const Event = dbConnection.model('Event', require('./schema/event_schema'));
+const EventType = dbConnection.model('EventType', require('./schema/event_type_schema'));
+
 module.exports = {
+  Calendar,
+  Event,
+  EventType,
   User
 };
