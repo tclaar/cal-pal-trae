@@ -27,7 +27,7 @@ const createUser = async (user) => {
     if (existingUser !== null) {
       return {
         success: false,
-        error: 'user already exists', 
+        error: 'user already exists',
         code: 403
       };
     }
@@ -69,7 +69,6 @@ const deleteUser = async (login) => {
       success: true,
       code: 200
     };
-
   } catch (error) {
     return {
       success: false,
@@ -79,7 +78,45 @@ const deleteUser = async (login) => {
   }
 };
 
-/** Search for users by username - returns partial matches, case insensitive. */
+const getUserByUsername = async (un) => {
+  if (!un) {
+    return {
+      success: false,
+      error: 'search index is required',
+      code: 400
+    };
+  }
+
+  try {
+    const user = await User.findOne({
+      username: un
+    })
+      .select('-password')
+      .select('-salt');
+
+    if (user === null) {
+      return {
+        success: false,
+        error: 'no matches found',
+        code: 404
+      };
+    }
+
+    return {
+      success: true,
+      code: 200,
+      user: user
+    };
+  } catch (error) {
+    return {
+      success: false,
+      error: error.message,
+      code: 500
+    };
+  }
+};
+
+/** Search for users by username. Can be used strictly if un is a string, or with other rules if un is a RegExp. */
 const searchUsersByUsername = async (un) => {
   if (!un) {
     return {
@@ -165,6 +202,7 @@ const updateUser = async (login, changes) => {
 module.exports = {
   createUser,
   deleteUser,
+  getUserByUsername,
   searchUsersByUsername,
   updateUser
 };
