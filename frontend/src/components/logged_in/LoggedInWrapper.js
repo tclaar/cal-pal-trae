@@ -10,6 +10,7 @@ import Header from './Header';
 import NavBar from './NavBar';
 import NewEvent from './NewEvent';
 import EditEvent from './EditEvent';
+import Settings from './Settings';
 
 const CalendarContext = createContext(null);
 const EventContext = createContext(null);
@@ -55,7 +56,7 @@ const LoggedInWrapper = () => {
                 <Route path="/edit-event" element={<EditEvent />} />
                 <Route path="/new-event" element={<NewEvent />} />
                 <Route path="/messages/" element={<h1>Messages</h1>} />
-                <Route path="/settings/" element={<h1>Settings</h1>} />
+                <Route path="/settings/" element={<Settings />} />
               </Routes>
             </EventContext.Provider>
           </div>
