@@ -40,3 +40,13 @@
   max-width: 300px;
   margin: 20px auto;
 }
+
+.ACFormGroup {
+  width: 75%;
+  margin: auto;
+}
+
+.AccountCreationScreen button {
+  display: block;
+  margin: 2vmin auto;
+}

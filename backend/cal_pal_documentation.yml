@@ -1,0 +1,331 @@
+openapi: 3.0.0
+servers: []
+info:
+  version: '1.0.0'
+  title: cal-pal-api
+  description: The API for CalPal, application for TCSS 460 Winter 2024
+paths:
+  /auth:
+    post:
+      tags:
+        - authentication
+      description: checks username and password for a match with database records.
+      operationId: authenticate
+      parameters:
+        - in: query
+          name: login
+          schema:
+            $ref: '#/components/schemas/Login'
+          required: true
+          description: login to be authenticated.
+      responses:
+        '200':
+          description: authentication successful
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/SuccessResponse'
+        '400':
+          description: authentication failed - bad request.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        '401':
+          description: authentication failed - input does not match our records.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        '500':
+          description: authentication failed - internal server error.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+  /user:
+    post:
+      tags:
+        - user
+      description: create a new user account.
+      operationId: createUser
+      parameters:
+        - in: query
+          name: user
+          type: object
+          $ref: '#/components/schemas/User'
+      responses:
+        '201':
+          description: account creation success.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/SuccessResponse'
+        '400':
+          description: account creation failure - bad body.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        '403':
+          description: account creation failure - username already exists.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        '500':
+          description: account creation failure - internal server error.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+    delete:
+      tags:
+        - user
+      description: deletes a user from the database.
+      operationId: deleteUser
+      parameters:
+        - in: query
+          name: login
+          type: object
+          $ref: '#/components/schemas/Login'
+      responses:
+        '200':
+          description: account deletion successful.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/SuccessResponse'
+        '400':
+          description: account deletion failure - bad request.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        '401':
+          description: account deletion failure - authentication failed.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        '500':
+          description: account deletion failure - internal server error.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+    put:
+      tags:
+        - user
+      description: update the data stored with a user that already exists.
+      operationId: updateUser
+      parameters:
+        - in: query
+          name: login
+          schema:
+            $ref: '#/components/schemas/Login'
+        - in: query
+          name: changes
+          schema:
+            type: object
+          required: true
+      responses:
+        '200':
+          description: update success.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/SuccessResponse'
+        '400':
+          description: update failure - bad request.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        '401':
+          description: update failure - authentication failed.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        '500':
+          description: update failure - internal server error.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+  /user/{un}:
+    get:
+      tags:
+        - user
+      description: Search for users by username. Search is non-strict and case insenstitive ("B1G" will turn up "b1gd3vd0g").
+      operationId: searchByUsername
+      parameters:
+        - in: path
+          name: un
+          description: username of the account we are trying to authenticate.
+          schema:
+            type: string
+          required: true
+      responses:
+        '200':
+          description: authentication success
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/SuccessResponse'
+        '400':
+          description: bad request - check body parameters
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        '404':
+          description: no matches were found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        '500':
+          description: internal server error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+
+components:
+  schemas:
+    Calendar:
+      type: object
+      description: a collection of events of certain types, belonging to a certain user.
+      properties:
+        cal_id: 
+          type: number
+        name:
+          type: string
+        owner:
+          type: number
+          description: the user_id of the owner of this calendar.
+        event_types:
+          type: array
+          description: stores evt_t_ids for event types.
+          items:
+            type: number 
+        events:
+          type: array
+          description: stores ids for events.
+          items:
+            type: number
+    Date:
+      type: object
+      properties:
+        year:
+          type: number
+          description: the year.
+        month:
+          type: number
+          description: the number of the month.
+          minimum: 1 # january
+          maximum: 12 # december
+        day:
+          oneOf:
+            - type: number
+              description: for when the number day of the month is important (most common)
+              minimum: 1
+              maximum: 31
+            - type: object
+              description: for when the week of the month and the day of the week are important
+              properties:
+                index: 
+                  type: number
+                  description: which week of the month marks this event
+                  minimum: 1
+                  maximum: 5 # there's never more than five of one day in any month
+                dow: 
+                  type: number
+                  description: which day of the week marks this event
+                  minimum: 0
+                  maximum: 6
+        hour:
+          type: number
+          minimum: 0
+          maximum: 23
+        minute:
+          type: number
+          minimum: 0
+          maximum: 59
+    Event:
+      type: object
+      properties:
+        name:
+          type: string
+          description: the name a user defines to identify their event.
+        date:
+          type: object
+    EventField:
+      type: object
+      properties:
+        field_name:
+          type: string
+        data_type:
+          type: string
+        reqd:
+          type: boolean
+      description: defines a field name
+    EventType:
+      type: object
+      properties:
+        fields:
+          type: array
+          items:
+            type: object
+            $ref: '#/components/schemas/EventField'
+      description: defines required and optional fields for an event
+    ErrorResponse:
+      type: object
+      properties:
+        error:
+          type: string
+          description: message to the user about what went wrong
+      description: http response
+    Login:
+      type: object
+      properties:
+        un:
+          type: string
+          description: username
+        pw:
+          type: string
+          description: username
+      description: username and password
+    Preferences:
+      type: object
+      description: how the user wants their app to be set up
+    SuccessResponse:
+      type: object
+      properties:
+        results:
+          type: array
+          items:
+            type: object
+          description: the return value of the response, where applicable
+    User:
+      type: object
+      properties:
+        email: 
+          type: string
+          description: the email address associated with this user account.
+        _id:
+          type: object
+          description: the mongodb id.
+        login:
+          type: object
+          $ref: '#/components/schemas/Login'
+          description: this user's login
+        phone:
+          type: number
+          description: the phone number associated with this user account.
+        preferences:
+          type: object
+          $ref: '#/components/schemas/Preferences'
+          description: this user's preferences
