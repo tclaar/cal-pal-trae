@@ -38,6 +38,9 @@ const createUser = async (user) => {
     user.password = hashedPw;
     user.salt = salt;
 
+    // Add an empty array to store event types
+    user.event_types = []; 
+
     // Finally we create the new document.
     await User.create(user);
     return {

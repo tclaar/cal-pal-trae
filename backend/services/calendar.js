@@ -2,17 +2,7 @@
 const router = require("express").Router();
 
 const { getCalendarById, createCalendar, updateCalendar, deleteCalendar } = require('../mongoose/functions/calendar_functions');
-
-const processRequest = async (res, func, errMsg) => {
-  try {
-    const result = await func();
-  
-    return res.status(result.code).json(result)
-  } catch (error) {
-    console.error(`Error: ${error}`);
-    return res.status(500).json({ error: errMsg });
-  }
-}
+const { processRequest } = require('../service_functions');
 
 router.get("/:id", async (req, res) => {
   processRequest(
