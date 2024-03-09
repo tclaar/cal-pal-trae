@@ -10,7 +10,14 @@ const Settings = () => {
     <div className='Settings'>
       <h3>Hello {userState.user.username}!</h3>
       <button className='btn btn-primary btn-lg'>Update account</button>
-      <button className='btn btn-secondary btn-lg'>Sign out</button>
+      <button className='btn btn-secondary btn-lg' onClick={async () => {
+        await fetch('http://localhost:2000/auth/x/', {
+          headers: {
+            'Content-Type': 'application/json'
+          }, method: 'POST'
+        });
+        setUserState({ loggedIn: false });
+      }}>Sign out</button>
       <h3>Preferences:</h3>
       <br />
       <br />
