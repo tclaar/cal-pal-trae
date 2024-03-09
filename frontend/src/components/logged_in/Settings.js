@@ -9,7 +9,7 @@ const Settings = () => {
   return (
     <div className='Settings'>
       <h3>Hello {userState.user.username}!</h3>
-      <button className='btn btn-primary btn-lg'>Update account</button>
+      <Link className='btn btn-primary btn-lg' to={'/settings/upd'}>Update account</Link>
       <button className='btn btn-secondary btn-lg' onClick={async () => {
         await fetch('http://localhost:2000/auth/x/', {
           headers: {

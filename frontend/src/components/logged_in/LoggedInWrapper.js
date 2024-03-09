@@ -12,6 +12,7 @@ import NewEvent from './NewEvent';
 import EditEvent from './EditEvent';
 import Settings from './Settings';
 import DeleteAcc from './DeleteAcc';
+import UpdateAcc from './UpdateAcc';
 
 const CalendarContext = createContext(null);
 const EventContext = createContext(null);
@@ -59,6 +60,7 @@ const LoggedInWrapper = () => {
                 <Route path="/messages/" element={<h1>Messages</h1>} />
                 <Route path="/settings/" element={<Settings />} />
                 <Route path="/settings/del" element={<DeleteAcc />} />
+                <Route path='/settings/upd' element={<UpdateAcc />} />
               </Routes>
             </EventContext.Provider>
           </div>

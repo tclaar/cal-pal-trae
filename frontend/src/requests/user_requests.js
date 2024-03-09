@@ -36,6 +36,38 @@ const requestAccountDeletion = async (login) => {
   return deletion;
 };
 
+const requestAccountUpdate = async (username, changes, pw) => {
+  // Check structure of request
+  if (!(username && changes)) {
+    return {
+      success: false,
+      error: 'bad request',
+      code: 400
+    };
+  }
+  // Special requirements if we're changing pw
+  if (changes.password) {
+    if (!pw) {
+      return {
+        success: false,
+        error: 'Must confirm password when changing password.',
+        code: 400
+      };
+    }
+  }
+  const login = { un: username, pw: pw};
+  const response = await fetch(uri, {
+    ...HEADERS,
+    method: 'PUT',
+    body: JSON.stringify({
+      login: login,
+      changes: changes
+    })
+  });
+  const update = await response.json();
+  return update;
+}
+
 const requestGetUserByUsername = async (un) => {
   const response = await fetch(uri + '/s/' + un, {
     ...HEADERS,
@@ -45,4 +77,13 @@ const requestGetUserByUsername = async (un) => {
   return user;
 };
 
-export { requestAccountCreation, requestAccountDeletion, requestGetUserByUsername };
+const requestGetUserById = async (id) => {
+  const response = await fetch('http://localhost:2000/user/i/' + id, {
+    ...HEADERS,
+    method: 'GET'
+  });
+  const user = await response.json();
+  return user;
+};
+
+export { requestAccountCreation, requestAccountDeletion, requestAccountUpdate, requestGetUserByUsername, requestGetUserById };
