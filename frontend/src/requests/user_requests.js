@@ -27,7 +27,6 @@ const requestAccountCreation = async () => {
 };
 
 const requestAccountDeletion = async (login) => {
-  const pwInput = document.querySelector('.DeleteAcc .Password').value.trim();
   const response = await fetch(uri, {
     ...HEADERS,
     method: 'DELETE',
