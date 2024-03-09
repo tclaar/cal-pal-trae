@@ -11,6 +11,7 @@ import NavBar from './NavBar';
 import NewEvent from './NewEvent';
 import EditEvent from './EditEvent';
 import Settings from './Settings';
+import DeleteAcc from './DeleteAcc';
 
 const CalendarContext = createContext(null);
 const EventContext = createContext(null);
@@ -57,6 +58,7 @@ const LoggedInWrapper = () => {
                 <Route path="/new-event" element={<NewEvent />} />
                 <Route path="/messages/" element={<h1>Messages</h1>} />
                 <Route path="/settings/" element={<Settings />} />
+                <Route path="/settings/del" element={<DeleteAcc />} />
               </Routes>
             </EventContext.Provider>
           </div>

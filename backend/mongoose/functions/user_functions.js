@@ -129,7 +129,7 @@ const searchUsersByUsername = async (un) => {
   try {
     const users = await User.find({
       username: new RegExp(un, 'i')
-    });
+    }).select('-password').select('-salt');
 
     if (users.length === 0) {
       return {
