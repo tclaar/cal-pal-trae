@@ -1,7 +1,9 @@
 import { useContext } from "react";
 import { LoginContext } from "./LoggedOutWrapper";
 import welcomeLogo from "../../img/calpal_logo.png";
+
 const LoginScreen = () => {
+  
   const { loginState, setLoginState } = useContext(LoginContext);
 
   const validateInput = (event) => {

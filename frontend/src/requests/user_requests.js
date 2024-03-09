@@ -26,7 +26,17 @@ const requestAccountCreation = async () => {
   return creation;
 };
 
-// Depending on the context with which we use this request, we may want un to be a string or a RegExp
+const requestAccountDeletion = async (login) => {
+  const pwInput = document.querySelector('.DeleteAcc .Password').value.trim();
+  const response = await fetch(uri, {
+    ...HEADERS,
+    method: 'DELETE',
+    body: JSON.stringify({ login: login })
+  });
+  const deletion = await response.json();
+  return deletion;
+};
+
 const requestGetUserByUsername = async (un) => {
   const response = await fetch(uri + '/s/' + un, {
     ...HEADERS,
@@ -34,6 +44,6 @@ const requestGetUserByUsername = async (un) => {
   });
   const user = await response.json();
   return user;
-}
+};
 
-export { requestAccountCreation, requestGetUserByUsername };
+export { requestAccountCreation, requestAccountDeletion, requestGetUserByUsername };
