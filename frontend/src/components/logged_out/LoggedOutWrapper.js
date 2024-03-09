@@ -63,7 +63,7 @@ const LoggedOutWrapper = () => {
       } else if (obj.success) {
         // Logging in has been successful! You're gonna finish this request, then you're going to call
         // the next API to retrieve public user information.
-        const uri2 = encodeURI(`http://localhost:2000/user/${loginState.input.un}`);
+        const uri2 = encodeURI(`http://localhost:2000/user/s/${loginState.input.un}`);
         // Do the job!
         const response2 = await fetch(uri2, {
           method: "GET",
@@ -77,12 +77,13 @@ const LoggedOutWrapper = () => {
         // Update the UserContext, leading to the LoggedInWrapper to take effect.
         console.log("Updating UserContext");
         setUserState({
-          ...obj2,
+          user: obj2.user,
           loggedIn: true,
           calendars: [
             "65e78634451a8fd7eb403bfe",
           ]
         });
+        console.log(userState);
       }
     };
 

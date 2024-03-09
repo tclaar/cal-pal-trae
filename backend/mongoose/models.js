@@ -6,7 +6,7 @@ function uri(dbName) {
   return `mongodb+srv://${mongoLogin.un}:${mongoLogin.pw}@cal-pal-cluster.qvdyrdk.mongodb.net/${dbName}?retryWrites=true&w=majority`;
 };
 
-const userConnection = mongoose.createConnection(uri('users'));
+const userConnection = mongoose.createConnection(uri('cal-pal'));
 const User = userConnection.model('User', require('./schema/user_schema'));
 
 const dbConnection = mongoose.createConnection(uri('cal-pal-test-1'));

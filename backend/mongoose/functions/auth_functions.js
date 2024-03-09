@@ -43,6 +43,14 @@ const authenticate = async (login) => {
   }
 };
 
+const getUserId = async (un) => {
+  const user = await User.findOne({
+    username: un
+  });
+  return user._id;
+}
+
 module.exports = {
-  authenticate
+  authenticate,
+  getUserId
 };
