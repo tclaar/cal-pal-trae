@@ -10,6 +10,7 @@ import mapAPIKey from "../../config/map_api_key.json";
 import React, {useState, useContext, useEffect} from 'react';
 import { Link } from 'react-router-dom';
 import { CalendarContext, EventContext } from './LoggedInWrapper';
+import ConfirmableButton from './ConfirmableButton';
 
 function WeekView() {
     // date object for today's date
@@ -69,7 +70,7 @@ function WeekView() {
 
 // Component that represents a Day entry within the week view list.
 function Day({ date }) {
-    const [calendars] = useContext(CalendarContext);
+    const {calendars} = useContext(CalendarContext);
     const [, setEvent] = useContext(EventContext);
     
     const [events, setEvents] = useState([]);
@@ -156,10 +157,10 @@ function Day({ date }) {
 // Component that represents an Event entry within the week view list.
 function Event({ event }) {
     const [, setEvent] = useContext(EventContext);
-    const [calendars, , refreshCalendars] = useContext(CalendarContext);
+    const {calendars, refreshCalendars} = useContext(CalendarContext);
 
     const [mouseOver, setMouseOver] = useState(false);
-    const [confirmDelete, setConfirmDelete] = useState(false);
+    const [fieldTypes, setFieldTypes] = useState({});
     
     // Returns a string based on the time range of the event. Format
     // ": HH:MM (AM|PM)" if no end time
@@ -184,7 +185,6 @@ function Event({ event }) {
 
     function handleMouseLeave() {
         setMouseOver(false);
-        setConfirmDelete(false);
     }
 
     function handleMouseEnter() {
@@ -195,27 +195,45 @@ function Event({ event }) {
         setEvent(event);
     }
 
-    async function handleDeleteClick() {
-        if (confirmDelete) {
-            try {
-                await fetch("http://localhost:2000/event", {
-                    method: "DELETE",
-                    headers: {
-                        "Content-Type": "application/json",
-                    },
-                    body: JSON.stringify({
-                        eventId: event._id,
-                        calendarId: event.calendarId
-                    })
-                });
-                refreshCalendars();
-            } catch (err) {
-                console.error("File deletion failed: " + err);
-            }
-        } else {
-            setConfirmDelete(true);
+    async function handleDelete() {
+        try {
+            await fetch("http://localhost:2000/event", {
+                method: "DELETE",
+                credentials: "include",
+                headers: {
+                    "Content-Type": "application/json",
+                },
+                body: JSON.stringify({
+                    eventId: event._id,
+                    calendarId: event.calendarId
+                })
+            });
+            refreshCalendars();
+        } catch (err) {
+            console.error("File deletion failed: " + err);
         }
     }
+
+    async function getFieldTypes() {
+        try {
+            const response = await fetch(`http://localhost:2000/event/type/${event.type}`, {
+                method: "GET"
+            });
+            const fields = (await response.json()).event_type.fields;
+            const types = {};
+            for (const fieldName of Object.keys(event.custom_fields)) {
+                types[fieldName] = fields[fieldName].type;
+            }
+            setFieldTypes(types);
+        } catch (error) {
+            console.error("Failed getting field type: " + error)
+        }
+        
+    }
+
+    useEffect(() => {
+        getFieldTypes();
+    }, [])
 
     return (
         <>
@@ -226,13 +244,13 @@ function Event({ event }) {
                     {mouseOver && <>
                         <Link to="/edit-event/" className="btn btn-outline-primary" style={{"marginLeft" : "10px"}}
                             onClick={handleEditClick}>Edit</Link>
-                        <button className="btn btn-outline-secondary" style={{"marginLeft" : "10px"}}
-                            onClick={handleDeleteClick}>{confirmDelete ? "Confirm" : "Delete"}</button>
+                        <ConfirmableButton className="btn btn-outline-secondary" style={{"marginLeft" : "10px"}}
+                            onConfirm={handleDelete} text="Delete" />
                     </>}
                 </p>
                 <p className="evt-cal text-body-secondary">{calendars[event.calendarId].name}</p>
                 {event.custom_fields && Object.keys(event.custom_fields).map((key) => {
-                    return (
+                    return fieldTypes[key] === "location" ?  <LocationField key={key} location={event.custom_fields[key]} /> : (
                         <div key={key}>
                             <p className="field-text text-body-secondary">{key}: {event.custom_fields[key]}</p>
                         </div>

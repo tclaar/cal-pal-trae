@@ -12,7 +12,7 @@ import EventFields from './EventFields';
 function NewEvent() {
     const navigate = useNavigate();
 
-    const [calendars, , refreshCalendars] = useContext(CalendarContext);
+    const {calendars, refreshCalendars} = useContext(CalendarContext);
     const [event, setEvent] = useContext(EventContext);
     
     const [calendar, setCalendar] = useState("");
@@ -46,6 +46,7 @@ function NewEvent() {
         try {
             const response = await fetch("http://localhost:2000/event/", {
                 method: "POST",
+                credentials: "include",
                 headers: {
                     "Content-Type": "application/json",
                 },
