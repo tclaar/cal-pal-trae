@@ -284,7 +284,7 @@ function LocationField({ location }) {
                     style={{display: "block", margin: "10px"}}
                     loading="lazy"
                     title="map-frame"
-                    src={`https://www.google.com/maps/embed/v1/place?key=AIzaSyCL7h3KXCa-vKkb9e-K32pYLSD6-ZrtzEs
+                    src={`https://www.google.com/maps/embed/v1/place?key=${mapAPIKey.key}
                             &q=${location}`}>
                 </iframe>}
             </div>
