@@ -1,4 +1,5 @@
 import React, { useState, useEffect, useContext } from "react";
+import Input from './Input';
 import { EventContext } from './LoggedInWrapper';
 
 function EventFields() {
@@ -75,38 +76,11 @@ function EventFields() {
 
             {Object.keys(customFields).map((key) => {
                 return (
-                    <Input name={key} key={key} type={customFields[key]} reqd={false}
+                    <Input name={key} key={key} type={customFields[key]} reqd={customFields[key].required}
                         value={event.custom_fields && event.custom_fields[key]} onChange={(e) => setCustomField(key, e.target.value)} />
                 );
             })}
         </>
-    )
-}
-
-function Input({ name, type, reqd, value="", onChange }) {
-    const [errMsg, setErrMsg] = useState("");
-
-    function handleChange(e) {
-        let error = "";
-        if (onChange) {
-            error = onChange(e);
-        }
-        if (reqd && !e.target.value) {
-            error = name + " field is required.";
-        } 
-        setErrMsg(error);
-    }
-
-    return (
-        <div>
-            <label htmlFor={name} className="form-label mt-4">
-                {name}{reqd && <span className="text-secondary">*</span>}
-            </label>
-            <input className={"form-control" + (errMsg ? " is-invalid" : "")} type={type} id={name} 
-                value={value} onChange={handleChange} onBlur={handleChange}></input>
-            {/* Error message (only displayed when errMsg is not empty) */}
-            {errMsg && <div className="invalid-feedback">{errMsg}</div>}
-        </div>
     )
 }
 

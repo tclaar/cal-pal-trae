@@ -5,7 +5,7 @@
 
 const mongoose = require("mongoose");
 
-const { Calendar } = require("../models");
+const { Calendar, User } = require("../models");
 
 /** An error to return for an invalid calendar ID. */
 const badCalendarIdError = {
@@ -63,6 +63,12 @@ const createCalendar = async (calendar, userId) => {
   }
 
   const newCalendar = await Calendar.create(calendar);
+
+  // Add calendar ID to user document
+  const user = await User.findById(userId);
+  user.calendars.push(newCalendar._id);
+  await user.save();
+
   return {
     success: true,
     code: 201,
@@ -141,6 +147,11 @@ const deleteCalendar = async (id, userId) => {
   }
 
   const deleted = await Calendar.findByIdAndDelete(id);
+
+  // remove calendar ID from user document
+  const user = await User.findById(userId);
+  user.calendars.splice(user.calendars.indexOf(id), 1);
+  await user.save();
 
   return {
     success: true,

@@ -6,6 +6,7 @@ const { User } = require('../models');
 
 const { hash, generateSalt } = require('../../hashing');
 const { authenticate } = require('./auth_functions');
+const { incrementStat } = require('./usage_functions');
 
 /** Add a new user to the database. */
 const createUser = async (user) => {
@@ -38,11 +39,11 @@ const createUser = async (user) => {
     user.password = hashedPw;
     user.salt = salt;
 
-    // Add an empty array to store event types
-    user.event_types = []; 
-
     // Finally we create the new document.
     await User.create(user);
+    // Success can be assumed at this point.
+    // Before we add the account, let's increment our stat.
+    await incrementStat('accts_created');
     return {
       success: true,
       code: 201
