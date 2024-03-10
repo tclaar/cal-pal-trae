@@ -116,6 +116,31 @@ const getUserByUsername = async (un) => {
   }
 };
 
+const getUserById = async (id) => {
+  try {
+    const user = await User.findById(id).select('-password').select('-salt');
+    if (user === null) {
+      return {
+        success: false,
+        error: 'no match found',
+        code: 404
+      };
+    } else {
+      return {
+        success: true,
+        code: 200,
+        user: user
+      };
+    }
+  } catch (error) {
+    return {
+      success: false,
+      error: error.message,
+      code: 500
+    };
+  }
+}
+
 /** Search for users by username. Can be used strictly if un is a string, or with other rules if un is a RegExp. */
 const searchUsersByUsername = async (un) => {
   if (!un) {
@@ -157,9 +182,11 @@ const searchUsersByUsername = async (un) => {
 const updateUser = async (login, changes) => {
   try {
     // authenticate login.
-    const authentication = await authenticate(login);
-    if (!authentication.success) {
-      return authentication;
+    if (changes.password) {
+      const authentication = await authenticate(login);
+      if (!authentication.success) {
+        return authentication;
+      }
     }
 
     const chgs = changes ?? {};
@@ -203,6 +230,7 @@ module.exports = {
   createUser,
   deleteUser,
   getUserByUsername,
+  getUserById,
   searchUsersByUsername,
   updateUser
 };

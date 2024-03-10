@@ -5,7 +5,7 @@
 import '../css/WeekView.css';
 import '../../images/maps-icon.png';
 
-import mapAPIKey from "../../config/map_api_key.json";
+// import mapAPIKey from "../../config/map_api_key.json";
 
 import React, {useState, useContext, useEffect} from 'react';
 import { Link } from 'react-router-dom';
