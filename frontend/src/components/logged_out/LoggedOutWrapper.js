@@ -42,6 +42,7 @@ const LoggedOutWrapper = () => {
       // Do the job!
       const response = await fetch(uri, {
         method: "POST",
+        credentials: "include",
         headers: {
           "Content-Type": "application/json"
         },
@@ -78,10 +79,7 @@ const LoggedOutWrapper = () => {
         console.log("Updating UserContext");
         setUserState({
           user: obj2.user,
-          loggedIn: true,
-          calendars: [
-            "65e78634451a8fd7eb403bfe",
-          ]
+          loggedIn: true
         });
         console.log(userState);
       }

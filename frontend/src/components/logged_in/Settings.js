@@ -28,7 +28,7 @@ const Settings = () => {
 };
 
 // function Settings() {
-//   const [calendars] = useContext(CalendarContext);
+//   const {calendars} = useContext(CalendarContext);
 //   const [selectedLanguage, setSelectedLanguage] = useState('English');
 //   const [selectedCountry, setSelectedCountry] = useState('United States');
 //   const [selectedDateFormat, setSelectedDateFormat] = useState('MM/DD/YYYY');

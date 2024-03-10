@@ -1,13 +1,18 @@
 import '../css/CalendarSelect.css';
-import React, { useContext }from "react";
+import React, { useContext } from "react";
+import { Link } from 'react-router-dom';
 import {CalendarContext} from './LoggedInWrapper';
 
 function CalendarSelect() {
-    const [calendars, setCalendars] = useContext(CalendarContext);
+    const {calendars, setCalendars, setSelectedCalendar} = useContext(CalendarContext);
 
     // react to the add calendar button being clicked
     function addCalendar() {
-        // TODO: fill in functionality, likely open calendar creation view
+        setSelectedCalendar({ 
+            event_types: [],
+            added_event_types: [],
+            events: []
+        });
     }
 
     // react to a calendar checkbox being changed
@@ -17,13 +22,18 @@ function CalendarSelect() {
         setCalendars(newCals);
     }
 
+    function handleEditCalendar(id) {
+        calendars[id].added_event_types = [];
+        setSelectedCalendar(calendars[id]);
+    }
+
     return (
         <>
             <div id="calSelect" className="dropdown-menu show">
                 <h5 className="dropdown-header">
                     Calendars
                     {/* the add calendar button */}
-                    <button id="addCal" className="btn btn-outline-secondary" type="button" onClick={addCalendar}>+</button>
+                    <Link id="addCal" className="btn btn-outline-secondary" to="/new-calendar/" onClick={addCalendar}>+</Link>
                 </h5>
                 
                 <div className="dropdown-divider"></div>
@@ -31,9 +41,14 @@ function CalendarSelect() {
                 {Object.keys(calendars).map((key) => {
                     return (
                         <div className="dropdown-item form-check" key={key}>
-                            <label className="form-check-label" htmlFor={key + "CalendarCheck"}>
+                            <Link 
+                                className="form-check-label" 
+                                htmlFor={key + "CalendarCheck"} 
+                                to="/edit-calendar/"
+                                onClick={() => handleEditCalendar(key)}
+                            >
                                 {calendars[key].name}
-                            </label>
+                            </Link>
                             <input 
                                 className="form-check-input" 
                                 type="checkbox" 
