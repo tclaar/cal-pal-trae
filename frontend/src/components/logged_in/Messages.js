@@ -1,8 +1,11 @@
-import React, { useState, useEffect, useRef } from "react";
+
+import React, { useState, useEffect, useRef, useContext } from "react";
 import axios from "axios";
 import "../css/Messages.css";
+import {UserContext} from "../../App";
 
 function Messages() {
+  const {userState, setUserState} = useContext(UserContext)
   const [threads, setThreads] = useState([]);
   const [selectedThread, setSelectedThread] = useState();
   const [messages, setMessages] = useState([]); // Corrected state variable name
@@ -13,9 +16,14 @@ function Messages() {
   const [userName, setUserName] = useState(""); // State for user ID input field
   const [addedUsers, setAddedUsers] = useState([]); // State for added users
   const messagesEndRef = useRef(null);
+
   ///////////////
-  const currentUserId = "65eca673a0b41b8900fe4862";
-  const currentUserName = "abdel";
+  //const currentUserId = "65eca673a0b41b8900fe4862";
+    //const currentUserName = "abdel";
+
+  const currentUserId = userState.user._id;
+  const currentUserName = userState.user.username;
+
 
   // this retrievs the threads that the current user is part of
   useEffect(() => {
@@ -106,7 +114,7 @@ function Messages() {
           text: message,
         }
       );
-      //displayThread();
+      setMessage('');
       console.log("message created:", response.data);
     } catch (err) {
       console.log("Error: " + err);
