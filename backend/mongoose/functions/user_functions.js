@@ -68,7 +68,7 @@ const deleteUser = async (login) => {
     await User.findOneAndDelete({
       username: login.un
     });
-
+    await incrementStat('accts_deleted')
     return {
       success: true,
       code: 200

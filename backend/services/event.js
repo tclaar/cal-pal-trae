@@ -4,6 +4,7 @@ const router = require("express").Router();
 const mongoose = require("mongoose");
 // Import mongoose model for event info
 const { Calendar, Event } = require("../mongoose/models");
+const { incrementStat } = require("../mongoose/functions/usage_functions");
 
 // ObjectID type for searching by ID in database
 const ObjectId = mongoose.Types.ObjectId;
@@ -36,6 +37,7 @@ router.post("/", async (req, res) => {
     const newEvent = new Event(event);
     calendar.events.push(newEvent);
     await calendar.save();
+    await incrementStat('evts_created')
     
     return res.status(201).json({ success: true, event: newEvent });
 
@@ -103,7 +105,7 @@ router.delete("/", async (req, res) => {
 
     calendar.events.id(eventId).deleteOne();
     await calendar.save();
-
+    await incrementStat('evts_deleted')
     return res.status(200).json({ success: true });
   } catch (error) {
     console.log(`Error: ${error}`);
