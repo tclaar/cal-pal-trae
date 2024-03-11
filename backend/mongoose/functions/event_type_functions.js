@@ -6,7 +6,7 @@
 const mongoose = require("mongoose");
 
 const { EventType, User } = require("../models");
-
+const { incrementStat } = require('./usage_functions');
 /** An error to return for an invalid event type ID. */
 const badEventTypeIdError = {
   error: 'A valid event type ObjectID parameter is required.',
@@ -59,7 +59,7 @@ const createEventType = async (eventType, userId) => {
   const user = await User.findById(userId);
   user.event_types.push(newEventType._id);
   await user.save();
-
+  await incrementStat('evt_types_created');
   return {
     success: true,
     code: 201,
