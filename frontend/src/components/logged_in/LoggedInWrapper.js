@@ -12,6 +12,9 @@ import NewEvent from './NewEvent';
 import EditEvent from './EditEvent';
 import Settings from './Settings';
 import DeleteAcc from './DeleteAcc';
+import NewCalendar from './NewCalendar';
+import EditCalendar from './EditCalendar';
+import UpdateAcc from './UpdateAcc';
 
 const CalendarContext = createContext(null);
 const EventContext = createContext(null);
@@ -21,12 +24,27 @@ const LoggedInWrapper = () => {
   const { userState, setUserState } = useContext(UserContext);
 
   const [calendars, setCalendars] = useState({});
+  const [selectedCalendar, setSelectedCalendar] = useState({});
   const [event, setEvent] = useState(null);
 
   async function refreshCalendars() {
     try {
+      // first, update the user object
+      const response = await fetch(`http://localhost:2000/user/s/${userState.user.username}`, {
+        method: "GET",
+        headers: {
+          "Content-Type": "application/json"
+        }
+      });
+      const userData = await response.json();
+      setUserState({
+        user: userData.user,
+        loggedIn: userState.loggedIn,
+      });
+
+      // then, refresh calendar data
       const newCalendars = {};
-      for (const id of userState.calendars) {
+      for (const id of userData.user.calendars) {
         const response = await fetch(`http://localhost:2000/calendar/${id}`, {
           method: "GET"
         });
@@ -47,7 +65,13 @@ const LoggedInWrapper = () => {
   return (
     <>
       <BrowserRouter>
-        <CalendarContext.Provider value={[calendars, setCalendars, refreshCalendars]}>
+        <CalendarContext.Provider value={{
+          calendars, 
+          setCalendars, 
+          refreshCalendars, 
+          selectedCalendar,
+          setSelectedCalendar
+        }}>
           <Header/>
           <div className="container">
             <EventContext.Provider value={[event, setEvent]}>
@@ -56,9 +80,12 @@ const LoggedInWrapper = () => {
                 <Route path="/" element={<WeekView />} />
                 <Route path="/edit-event" element={<EditEvent />} />
                 <Route path="/new-event" element={<NewEvent />} />
+                <Route path="/new-calendar" element={<NewCalendar />} />
+                <Route path="/edit-calendar" element={<EditCalendar />} />
                 <Route path="/messages/" element={<h1>Messages</h1>} />
                 <Route path="/settings/" element={<Settings />} />
                 <Route path="/settings/del" element={<DeleteAcc />} />
+                <Route path='/settings/upd' element={<UpdateAcc />} />
               </Routes>
             </EventContext.Provider>
           </div>

@@ -1,4 +1,4 @@
-const { createUser, deleteUser, updateUser, searchUsersByUsername, getUserByUsername } = require('../mongoose/functions/user_functions');
+const { createUser, deleteUser, updateUser, searchUsersByUsername, getUserByUsername, getUserById } = require('../mongoose/functions/user_functions');
 
 // Import express router for HTTP requests.
 const router = require('express').Router();
@@ -81,5 +81,16 @@ router.get('/:un', async (req, res) => {
     return res.status(500).json(serverError(error));
   }
 });
+
+// getUserById
+router.get('/i/:id', async (req, res) => {
+  try {
+    const id = req.params.id ?? '';
+    const user = await getUserById(id);
+    return res.status(user.code).json(user);
+  } catch (error) {
+    return res.status(500).json(serverError(error));
+  }
+})
 
 module.exports = router;
