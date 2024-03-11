@@ -1,17 +1,12 @@
-h3 {
-    /* font-size: 2.5rem;
-    margin-top: 40px; 
-    margin-bottom: 10px;
-    padding-left: 10px; 
-    border-bottom:1px solid #d3d3d3 ;
-    width: 17%; */
-  }
-  
+h1,h3 {
+  margin-top: 20px;
+}
   label {
     display: block;
     align-items: center;
+    margin-top: 10px;
     margin-bottom: 15px; 
-   
+
   }
   
   select,
@@ -28,3 +23,37 @@ h3 {
         display:inline-block;
         margin-top: 5px; 
   }
+
+body.light-mode,
+body.dark-mode {
+    transition: background-color 0.5s;
+}
+
+body.light-mode {
+    background-color: #ffffff;
+    color: #333333;
+}
+
+body.dark-mode {
+    background-color: #333333;
+    color: hsl(0, 23%, 94%);
+}
+
+.navbar-line {
+    height: 40px; 
+    width: 1px;
+    background-color: white;
+    display: inline-block;
+    margin: 0 10px; 
+}
+
+body.light-mode h1,
+body.light-mode h3,
+body.light-mode label {
+    color: #333333; 
+}
+
+body.dark-mode h1,
+body.dark-mode h3 {
+    color: hsl(0, 23%, 94%); 
+}
