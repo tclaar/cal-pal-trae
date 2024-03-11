@@ -13,10 +13,13 @@ const dbConnection = mongoose.createConnection(uri('cal-pal'));
 const Calendar = dbConnection.model('Calendar', require('./schema/calendar_schema'));
 const Event = dbConnection.model('Event', require('./schema/event_schema'));
 const EventType = dbConnection.model('EventType', require('./schema/event_type_schema'));
+const Thread = dbConnection.model('Thread', require('./schema/thread'));
 
 module.exports = {
   Calendar,
   Event,
   EventType,
-  User
+  User,
+  Thread
+
 };

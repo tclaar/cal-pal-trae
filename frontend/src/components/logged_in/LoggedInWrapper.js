@@ -12,6 +12,8 @@ import NewEvent from './NewEvent';
 import EditEvent from './EditEvent';
 import Settings from './Settings';
 import DeleteAcc from './DeleteAcc';
+import Messages from './Messages';
+
 
 const CalendarContext = createContext(null);
 const EventContext = createContext(null);
@@ -56,7 +58,7 @@ const LoggedInWrapper = () => {
                 <Route path="/" element={<WeekView />} />
                 <Route path="/edit-event" element={<EditEvent />} />
                 <Route path="/new-event" element={<NewEvent />} />
-                <Route path="/messages/" element={<h1>Messages</h1>} />
+                <Route path="/messages/" element={<Messages />} />
                 <Route path="/settings/" element={<Settings />} />
                 <Route path="/settings/del" element={<DeleteAcc />} />
               </Routes>
