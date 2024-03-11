@@ -5,12 +5,25 @@
 import '../css/WeekView.css';
 import '../../images/maps-icon.png';
 
-// import mapAPIKey from "../../config/map_api_key.json";
+
+
+import apiKeys from "../../config/api_keys.json";
 
 import React, {useState, useContext, useEffect} from 'react';
 import { Link } from 'react-router-dom';
 import { CalendarContext, EventContext } from './LoggedInWrapper';
 import ConfirmableButton from './ConfirmableButton';
+import Weather from './Weather';
+
+// helper functions
+
+// Creates a date object from a string with the following format:
+// YYYY-MM-DD
+function parseDate(dateString) {
+    return new Date(dateString + "T00:00:00");
+}
+
+// components
 
 function WeekView() {
     // date object for today's date
@@ -74,12 +87,6 @@ function Day({ date }) {
     const [, setEvent] = useContext(EventContext);
     
     const [events, setEvents] = useState([]);
-
-    // Creates a date object from a string with the following format:
-    // YYYY-MM-DD
-    function parseDate(dateString) {
-        return new Date(dateString + "T00:00:00");
-    }
 
     // Returns a list of events occuring on this day contained by any visible calendars.
     // List will be sorted by time range. Events without a time range will appear first.
@@ -231,6 +238,21 @@ function Event({ event }) {
         
     }
 
+    function getFieldComponent(fieldName) {
+        if (fieldTypes[fieldName] === "location") {
+            return (<div key={fieldName}>
+                <LocationField location={event.custom_fields[fieldName]} />
+                <Weather location={event.custom_fields[fieldName]} 
+                        dayOffset={parseDate(event.start.date).getDate() - (new Date()).getDate()} />
+            </div>);
+        }
+        return (
+            <div key={fieldName}>
+                <p className="field-text text-body-secondary">{fieldName}: {event.custom_fields[fieldName]}</p>
+            </div>
+        );    
+    }
+
     useEffect(() => {
         getFieldTypes();
     }, [])
@@ -249,13 +271,7 @@ function Event({ event }) {
                     </>}
                 </p>
                 <p className="evt-cal text-body-secondary">{calendars[event.calendarId].name}</p>
-                {event.custom_fields && Object.keys(event.custom_fields).map((key) => {
-                    return fieldTypes[key] === "location" ?  <LocationField key={key} location={event.custom_fields[key]} /> : (
-                        <div key={key}>
-                            <p className="field-text text-body-secondary">{key}: {event.custom_fields[key]}</p>
-                        </div>
-                    );    
-                })}
+                {event.custom_fields && Object.keys(event.custom_fields).map((key) => getFieldComponent(key))}
                 {event.location && <LocationField location={event.location} />}
             </div>
         </>
@@ -284,7 +300,7 @@ function LocationField({ location }) {
                     style={{display: "block", margin: "10px"}}
                     loading="lazy"
                     title="map-frame"
-                    src={`https://www.google.com/maps/embed/v1/place?key=AIzaSyCL7h3KXCa-vKkb9e-K32pYLSD6-ZrtzEs
+                    src={`https://www.google.com/maps/embed/v1/place?key=${apiKeys.map_embed_api_key}
                             &q=${location}`}>
                 </iframe>}
             </div>

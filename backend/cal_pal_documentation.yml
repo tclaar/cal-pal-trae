@@ -192,7 +192,148 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/ErrorResponse'
-
+  /message/thread:
+    post:
+      tags:
+        - thread
+      description: Create a new thread with name and users with no messages
+      operationId: createThread
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/ThreadData'
+      responses:
+        '201':
+          description: Thread created successfully
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Thread'
+        '400':
+          description: Bad request
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        '500':
+          description: Internal server error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+  /message/thread/{id}:
+    post:
+      tags:
+        - thread
+      description: Add a message to an existing thread by ID
+      operationId: addMessageToThread
+      parameters:
+        - in: path
+          name: id
+          description: ID of the thread
+          required: true
+          schema:
+            type: string
+        - in: requestBody
+          name: message
+          description: Message data
+          required: true
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Message'
+      responses:
+        '200':
+          description: Message added successfully
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Thread'
+        '400':
+          description: Bad request
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        '500':
+          description: Internal server error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'                
+    get:
+      summary: Retrieve thread by ID
+      tags:
+        - thread
+      description: Retrieve thread information by its ID
+      parameters:
+        - in: path
+          name: id
+          required: true
+          schema:
+            type: string
+          description: ID of the thread to retrieve
+      responses:
+        '200':
+          description: Successful response
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Thread'
+        '400':
+          description: Bad request
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        '404':
+          description: Thread not found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        '500':
+          description: Internal server error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+   /message/thread/userThreads/{id}:
+    get:
+      summary: Retrieve threads by user ID
+      tags:
+        - thread
+      description: Retrieve all threads that have a user ID in their group array
+      parameters:
+        - in: path
+          name: id
+          required: true
+          schema:
+            type: string
+          description: ID of the user to retrieve threads for
+      responses:
+        '200':
+          description: Successful response
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Thread'
+        '404':
+          description: No threads found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        '500':
+          description: Internal server error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'              
 components:
   schemas:
     Calendar:
@@ -329,3 +470,32 @@ components:
           type: object
           $ref: '#/components/schemas/Preferences'
           description: this user's preferences
+    Message:
+      type: object
+      properties:
+        text:
+          type: string
+          description: The message text
+        sender:
+          type: string
+          description: The sender of the message
+        createdAt:
+          type: string
+          format: date-time
+          description: The timestamp when the message was created
+    Thread:
+      type: object
+      properties:
+        group:
+          type: array
+          items:
+            type: string
+            description: The user IDs in the thread group
+        messages:
+          type: array
+          items:
+            $ref: '#/components/schemas/Message'
+          description: The messages in the thread
+        name:
+          type: string
+          description: The name of the thread

@@ -12,6 +12,7 @@ const Calendar = dbConnection.model('Calendar', require('./schema/calendar_schem
 const Event = dbConnection.model('Event', require('./schema/event_schema'));
 const EventType = dbConnection.model('EventType', require('./schema/event_type_schema'));
 const Stat = dbConnection.model('Stat', require('./schema/stat_schema'));
+const Thread = dbConnection.model('Thread', require('./schema/thread'));
 const User = dbConnection.model('User', require('./schema/user_schema'));
 
 module.exports = {
@@ -19,5 +20,6 @@ module.exports = {
   Event,
   EventType,
   Stat,
+  Thread,
   User
 };

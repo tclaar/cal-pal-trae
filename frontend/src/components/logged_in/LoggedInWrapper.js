@@ -12,6 +12,7 @@ import NewEvent from './NewEvent';
 import EditEvent from './EditEvent';
 import Settings from './Settings';
 import DeleteAcc from './DeleteAcc';
+import Messages from './Messages';
 import NewCalendar from './NewCalendar';
 import EditCalendar from './EditCalendar';
 import UpdateAcc from './UpdateAcc';
@@ -80,9 +81,9 @@ const LoggedInWrapper = () => {
                 <Route path="/" element={<WeekView />} />
                 <Route path="/edit-event" element={<EditEvent />} />
                 <Route path="/new-event" element={<NewEvent />} />
+                <Route path="/messages/" element={<Messages />} />
                 <Route path="/new-calendar" element={<NewCalendar />} />
                 <Route path="/edit-calendar" element={<EditCalendar />} />
-                <Route path="/messages/" element={<h1>Messages</h1>} />
                 <Route path="/settings/" element={<Settings />} />
                 <Route path="/settings/del" element={<DeleteAcc />} />
                 <Route path='/settings/upd' element={<UpdateAcc />} />
