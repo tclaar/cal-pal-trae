@@ -49,3 +49,12 @@
 #today {
     font-weight: 600;
 }
+body.light-mode h6,
+body.light-mode h6 a {
+    color: #333333; 
+}
+
+body.dark-mode h6,
+body.dark-mode h6 a {
+    color: hsl(0, 23%, 94%); 
+}
