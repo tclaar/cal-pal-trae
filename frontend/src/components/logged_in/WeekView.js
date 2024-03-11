@@ -7,14 +7,12 @@ import '../../images/maps-icon.png';
 
 
 
-import apiKeys from "../../config/api_keys.json";
-
 import React, {useState, useContext, useEffect} from 'react';
 import { Link } from 'react-router-dom';
 import { CalendarContext, EventContext } from './LoggedInWrapper';
 import ConfirmableButton from './ConfirmableButton';
 import Weather from './Weather';
-
+import apiKeys from '../../config/api_keys.json';
 // helper functions
 
 // Creates a date object from a string with the following format:
