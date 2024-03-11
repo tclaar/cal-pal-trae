@@ -7,7 +7,7 @@ function EditEvent() {
     const navigate = useNavigate();
 
     const [event] = useContext(EventContext);
-    const [, , refreshCalendars] = useContext(CalendarContext);
+    const { refreshCalendars } = useContext(CalendarContext);
 
     async function handleUpdateClick(e) {
         e.preventDefault();
@@ -15,6 +15,7 @@ function EditEvent() {
         try {
             const response = await fetch(`http://localhost:2000/event`, {
                 method: "PUT",
+                credentials: "include",
                 headers: {
                     "Content-Type": "application/json",
                 },

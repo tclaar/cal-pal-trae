@@ -16,7 +16,7 @@ const app = express();
 // Parse any request bodies into JSON instead of string.
 app.use(express.json());
 // Enable cross origin request from any origin.
-app.use(cors());
+app.use(cors({ credentials: true, origin: true }));
 app.use(
   session({
     secret: sessionInfo.secret,

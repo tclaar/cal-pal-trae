@@ -1,0 +1,9 @@
+.add-event-type {
+    display: inline-block;
+    margin-left: 10px;
+    height: 1.5rem;
+    width: 1.5rem;
+    font-size: 1.8rem;
+    padding: 0;
+    line-height: 1.5rem;
+}
