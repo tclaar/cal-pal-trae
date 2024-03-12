@@ -1,15 +1,15 @@
 const express = require('express');
 const router = express.Router();
-const { updatePreferences, getPreferences } = require('../mongoose/functions/preference_functions');
+const { updatePreferences } = require('../mongoose/functions/preference_functions');
 
 // PUT request to update preferences
-router.put("/:userName", async (req, res) => {
-  const userName = req.params.userName;
-  const changes = req.body.changes;
+router.put("/:username", async (req, res) => {
+  const username = req.params.username ?? "";
+  const changes = req.body.changes ?? {};
 
   try {
-    const updatedPreferences = await updatePreferences(userName, changes);
-    res.json(updatedPreferences);
+    const update = await updatePreferences(username, changes);
+    res.status(update.code).json(update);
   } catch (error) {
     res.status(500).json({ error: error.message });
   }

@@ -16,7 +16,6 @@ import Messages from './Messages';
 import NewCalendar from './NewCalendar';
 import EditCalendar from './EditCalendar';
 import UpdateAcc from './UpdateAcc';
-import DevStats from './DevStats';
 
 const CalendarContext = createContext(null);
 const EventContext = createContext(null);

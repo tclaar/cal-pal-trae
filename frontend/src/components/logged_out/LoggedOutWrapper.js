@@ -5,7 +5,7 @@ import { createContext, useContext, useEffect, useState } from 'react';
 import WelcomeScreen from './WelcomeScreen';
 import LoginScreen from './LoginScreen';
 import AccountCreationScreen from './AccountCreationScreen';
-import DevStats from './'
+import DevStats from './DevStats';
 import { UserContext } from '../../App';
 
 /** 
