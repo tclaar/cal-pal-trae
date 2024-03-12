@@ -5,7 +5,7 @@ import { createContext, useContext, useEffect, useState } from 'react';
 import WelcomeScreen from './WelcomeScreen';
 import LoginScreen from './LoginScreen';
 import AccountCreationScreen from './AccountCreationScreen';
-
+import DevStats from './DevStats';
 import { UserContext } from '../../App';
 
 /** 
@@ -26,7 +26,8 @@ const LoggedOutWrapper = () => {
       un: false, // does the username exist in the database?
       pw: false // does password match the given username?
     },
-    action: null // null, "login", or "create"
+    action: null, // null, "login", or "create",
+    developer: false
   });
 
   // Fetch the UserContext.
@@ -72,16 +73,23 @@ const LoggedOutWrapper = () => {
             "Content-Type": "application/json"
           }
         });
+
         // This is the object that we want, which holds all the information we need from the response.
         const obj2 = await response2.json();
         console.log("Logging Public User Information:", obj2);
         // Update the UserContext, leading to the LoggedInWrapper to take effect.
         console.log("Updating UserContext");
-        setUserState({
-          user: obj2.user,
-          loggedIn: true
-        });
-        console.log(userState);
+        if (loginState.developer) {
+          setUserState({
+            user: obj2.user,
+            developer: true
+          });
+        } else {
+          setUserState({
+            user: obj2.user,
+            loggedIn: true
+          });
+        }
       }
     };
 
@@ -97,12 +105,15 @@ const LoggedOutWrapper = () => {
   
   // Determine the content to be shown on the screen.
   let content;
-  if (loginState.action === null) {
+  if (loginState.developer) {
+    // User is a developer and wants to see stats.
+    content = <DevStats />
+  } else if (loginState.action === null) {
     // User has not chosen what to do.
     content = <WelcomeScreen />;
   } else if (loginState.action === "login") {
     // User wants to log into an existing account.
-    content = <LoginScreen />;
+    content = loginState.developer ? <LoginScreen developer={true} /> : <LoginScreen />;
   } else if (loginState.action === "create") {
     // User wants to create a new account.
     content = <AccountCreationScreen />;
