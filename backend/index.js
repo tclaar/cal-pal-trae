@@ -33,6 +33,7 @@ app.use('/user', require('./services/user.js'));
 app.use("/calendar", require("./services/calendar.js"));
 app.use("/event", require("./services/event.js"));
 app.use("/event/type", require("./services/event_type.js"));
+app.use('/preferences', require('./services/preferences.js'));
 
 // Start listening.
 app.listen(PORT, () => {
