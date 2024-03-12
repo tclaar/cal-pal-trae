@@ -91,7 +91,7 @@ const LoggedInWrapper = () => {
           <div className="container">
             <EventContext.Provider value={[event, setEvent]}>
               <Routes>
-                <Route path="/month/" element={<h1>Month</h1>} />
+                {/* <Route path="/month/" element={<h1>Month</h1>} /> */}
                 <Route path="/" element={<WeekView />} />
                 <Route path="/edit-event" element={<EditEvent />} />
                 <Route path="/new-event" element={<NewEvent />} />

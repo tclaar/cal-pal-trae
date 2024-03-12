@@ -5,10 +5,10 @@ function NavBar() {
   return (
     <footer className="navbar fixed-bottom navbar-light bg-primary">
       <nav className="nav nav-fill w-100">
-        <Link className="nav-link text-white" to="/month/">
+        {/* <Link className="nav-link text-white" to="/month/">
           Month
-        </Link>
-        <div className="navbar-line"></div>
+        </Link> */}
+        {/* <div className="navbar-line"></div> */}
         <Link className="nav-link text-white" to="/">
           Week
         </Link>

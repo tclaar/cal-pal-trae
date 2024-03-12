@@ -1,5 +1,6 @@
 const { User } = require('../models');
 const { hash } = require('../../hashing');
+const { incrementStat } = require('./usage_functions');
 
 const authenticate = async (login) => {
   // check that we have all the fields we need.
@@ -29,6 +30,7 @@ const authenticate = async (login) => {
 
     // Username exists in db. Does the password match?
     if (correctUser.password === hash(login.pw, correctUser.salt)) {
+      await incrementStat('logins');
       return { success: true, code: 200 };
     } else {
       return noMatchError;
