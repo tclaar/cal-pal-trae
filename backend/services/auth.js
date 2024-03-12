@@ -11,7 +11,6 @@ router.post('/', async (req, res) => {
     if (authentication.success) {
       req.session.userId = await getUserId(req.body.login.un);
     }
-
     return res.status(authentication.code).json(authentication);
   } catch (error) {
     return res.status(500).json({

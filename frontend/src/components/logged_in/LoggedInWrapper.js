@@ -16,6 +16,7 @@ import Messages from './Messages';
 import NewCalendar from './NewCalendar';
 import EditCalendar from './EditCalendar';
 import UpdateAcc from './UpdateAcc';
+import DevStats from './DevStats';
 
 const CalendarContext = createContext(null);
 const EventContext = createContext(null);
@@ -41,6 +42,7 @@ const LoggedInWrapper = () => {
       setUserState({
         user: userData.user,
         loggedIn: userState.loggedIn,
+        developer: userState.developer
       });
 
       // then, refresh calendar data
@@ -58,12 +60,24 @@ const LoggedInWrapper = () => {
       console.error("Unable to fetch calendars: " + error);
     }
   }
+  
+  useEffect(() => {
+    const theme = userState.user.preferences.theme;
+    const oldTheme = theme === 'light' ? 'dark' : 'light';
+    const newClass = `${theme}-mode`;
+    const oldClass = `${oldTheme}-mode`;
+
+    document.body.classList.remove(oldClass);
+    document.body.classList.add(newClass);
+    
+  }, [userState.user.preferences.theme])
+
 
   useEffect(() => {
     refreshCalendars();
-  }, [])
+  }, []);
 
-  return (
+  return userState.developer ? <DevStats /> : (
     <>
       <BrowserRouter>
         <CalendarContext.Provider value={{
@@ -77,7 +91,7 @@ const LoggedInWrapper = () => {
           <div className="container">
             <EventContext.Provider value={[event, setEvent]}>
               <Routes>
-                <Route path="/month/" element={<h1>Month</h1>} />
+                {/* <Route path="/month/" element={<h1>Month</h1>} /> */}
                 <Route path="/" element={<WeekView />} />
                 <Route path="/edit-event" element={<EditEvent />} />
                 <Route path="/new-event" element={<NewEvent />} />

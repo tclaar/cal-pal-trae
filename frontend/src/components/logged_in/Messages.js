@@ -114,6 +114,14 @@ function Messages() {
           text: message,
         }
       );
+      messages.push({
+        text: message,
+        createdAt: Date.now(),
+        sender: userState.user.username
+      });
+      setMessages(
+        messages
+      );
       setMessage('');
       console.log("message created:", response.data);
     } catch (err) {

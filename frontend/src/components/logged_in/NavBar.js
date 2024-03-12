@@ -3,18 +3,21 @@ import { Link } from 'react-router-dom';
 
 function NavBar() {
   return (
-    <footer className="navbar fixed-bottom navbar-light bg-light">
+    <footer className="navbar fixed-bottom navbar-light bg-primary">
       <nav className="nav nav-fill w-100">
-        <Link className="nav-link" to="/month/">
+        {/* <Link className="nav-link text-white" to="/month/">
           Month
-        </Link>
-        <Link className="nav-link" to="/">
+        </Link> */}
+        {/* <div className="navbar-line"></div> */}
+        <Link className="nav-link text-white" to="/">
           Week
         </Link>
-        <Link className="nav-link" to="/messages/">
+        <div className="navbar-line"></div>
+        <Link className="nav-link text-white" to="/messages/">
           Messages
         </Link>
-        <Link className="nav-link" to="/settings/">
+        <div className="navbar-line"></div>
+        <Link className="nav-link text-white" to="/settings/">
           Settings
         </Link>
       </nav>
