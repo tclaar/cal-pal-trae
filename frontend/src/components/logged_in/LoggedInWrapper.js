@@ -60,17 +60,19 @@ const LoggedInWrapper = () => {
       console.error("Unable to fetch calendars: " + error);
     }
   }
-  // Apply the initial theme based on the saved mode in local storage
-  const applyInitialTheme = (theme="light") => {
-    const body = document.body;
-    body.classList.add(theme+"-mode");
+  
+  useEffect(() => {
+    const theme = userState.user.preferences.theme;
+    const oldTheme = theme === 'light' ? 'dark' : 'light';
+    const newClass = `${theme}-mode`;
+    const oldClass = `${oldTheme}-mode`;
 
-  }
-  let theme = "";
-  if (userState.user.preferences && userState.user.preferences.theme) {
-    theme = userState.user.preferences.theme;
-  }
-  applyInitialTheme(theme);
+    document.body.classList.remove(oldClass);
+    document.body.classList.add(newClass);
+    
+  }, [userState.user.preferences.theme])
+
+
   useEffect(() => {
     refreshCalendars();
   }, []);
@@ -89,7 +91,7 @@ const LoggedInWrapper = () => {
           <div className="container">
             <EventContext.Provider value={[event, setEvent]}>
               <Routes>
-                <Route path="/month/" element={<h1>Month</h1>} />
+                {/* <Route path="/month/" element={<h1>Month</h1>} /> */}
                 <Route path="/" element={<WeekView />} />
                 <Route path="/edit-event" element={<EditEvent />} />
                 <Route path="/new-event" element={<NewEvent />} />

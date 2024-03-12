@@ -1,4 +1,4 @@
-const { getStat, getAllStats } = require('../mongoose/functions/usage_functions');
+const { getAllStats } = require('../mongoose/functions/usage_functions');
 
 // Import express router for HTTP requests.
 const router = require('express').Router();

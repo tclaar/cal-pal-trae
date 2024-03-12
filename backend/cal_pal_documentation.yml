@@ -4,7 +4,9 @@ info:
   version: '1.0.0'
   title: cal-pal-api
   description: The API for CalPal, application for TCSS 460 Winter 2024
+# HTTP requests:
 paths:
+  # Internally developed web services:
   /auth:
     post:
       tags:
@@ -43,298 +45,6 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/ErrorResponse'
-  /user:
-    post:
-      tags:
-        - user
-      description: create a new user account.
-      operationId: createUser
-      parameters:
-        - in: query
-          name: user
-          type: object
-          $ref: '#/components/schemas/User'
-      responses:
-        '201':
-          description: account creation success.
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/SuccessResponse'
-        '400':
-          description: account creation failure - bad body.
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/ErrorResponse'
-        '403':
-          description: account creation failure - username already exists.
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/ErrorResponse'
-        '500':
-          description: account creation failure - internal server error.
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/ErrorResponse'
-    delete:
-      tags:
-        - user
-      description: deletes a user from the database.
-      operationId: deleteUser
-      parameters:
-        - in: query
-          name: login
-          type: object
-          $ref: '#/components/schemas/Login'
-      responses:
-        '200':
-          description: account deletion successful.
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/SuccessResponse'
-        '400':
-          description: account deletion failure - bad request.
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/ErrorResponse'
-        '401':
-          description: account deletion failure - authentication failed.
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/ErrorResponse'
-        '500':
-          description: account deletion failure - internal server error.
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/ErrorResponse'
-    put:
-      tags:
-        - user
-      description: update the data stored with a user that already exists.
-      operationId: updateUser
-      parameters:
-        - in: query
-          name: login
-          schema:
-            $ref: '#/components/schemas/Login'
-        - in: query
-          name: changes
-          schema:
-            type: object
-          required: true
-      responses:
-        '200':
-          description: update success.
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/SuccessResponse'
-        '400':
-          description: update failure - bad request.
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/ErrorResponse'
-        '401':
-          description: update failure - authentication failed.
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/ErrorResponse'
-        '500':
-          description: update failure - internal server error.
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/ErrorResponse'
-  /user/{un}:
-    get:
-      tags:
-        - user
-      description: Search for users by username. Search is non-strict and case insenstitive ("B1G" will turn up "b1gd3vd0g").
-      operationId: searchByUsername
-      parameters:
-        - in: path
-          name: un
-          description: username of the account we are trying to authenticate.
-          schema:
-            type: string
-          required: true
-      responses:
-        '200':
-          description: authentication success
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/SuccessResponse'
-        '400':
-          description: bad request - check body parameters
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/ErrorResponse'
-        '404':
-          description: no matches were found
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/ErrorResponse'
-        '500':
-          description: internal server error
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/ErrorResponse'
-  /message/thread:
-    post:
-      tags:
-        - thread
-      description: Create a new thread with name and users with no messages
-      operationId: createThread
-      requestBody:
-        required: true
-        content:
-          application/json:
-            schema:
-              $ref: '#/components/schemas/Thread'
-      responses:
-        '201':
-          description: Thread created successfully
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/Thread'
-        '400':
-          description: Bad request
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/ErrorResponse'
-        '500':
-          description: Internal server error
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/ErrorResponse'
-  /message/thread/{id}:
-    post:
-      tags:
-        - thread
-      description: Add a message to an existing thread by ID
-      operationId: addMessageToThread
-      parameters:
-        - in: path
-          name: id
-          description: ID of the thread
-          required: true
-          schema:
-            type: string
-      requestBody:
-        description: Message data
-        content:
-          application/json:
-            schema:
-                $ref: '#/components/schemas/Message'
-              
-      responses:
-        '200':
-          description: Message added successfully
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/Thread'
-        '400':
-          description: Bad request
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/ErrorResponse'
-        '500':
-          description: Internal server error
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/ErrorResponse'                
-    get:
-      summary: Retrieve thread by ID
-      tags:
-        - thread
-      description: Retrieve thread information by its ID
-      parameters:
-        - in: path
-          name: id
-          required: true
-          schema:
-            type: string
-          description: ID of the thread to retrieve
-      responses:
-        '200':
-          description: Successful response
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/Thread'
-        '400':
-          description: Bad request
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/ErrorResponse'
-        '404':
-          description: Thread not found
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/ErrorResponse'
-        '500':
-          description: Internal server error
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/ErrorResponse'
-  /message/thread/userThreads/{id}:
-    get:
-      summary: Retrieve threads by user ID
-      tags:
-        - thread
-      description: Retrieve all threads that have a user ID in their group array
-      parameters:
-        - in: path
-          name: id
-          required: true
-          schema:
-            type: string
-          description: ID of the user to retrieve threads for
-      responses:
-        '200':
-          description: Successful response
-          content:
-            application/json:
-              schema:
-                type: array
-                items:
-                  $ref: '#/components/schemas/Thread'
-        '404':
-          description: No threads found
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/ErrorResponse'
-        '500':
-          description: Internal server error
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/ErrorResponse'              
-  
-  
   /calendar:
     post:
       tags:
@@ -543,8 +253,6 @@ paths:
             application/json:
               schema: 
                 $ref: '#/components/schemas/ErrorResponse'
-  
-
   /event:
     post:
       tags:
@@ -676,9 +384,7 @@ paths:
           content: 
             application/json:
               schema: 
-                $ref: '#/components/schemas/ErrorResponse'
-
-    
+                $ref: '#/components/schemas/ErrorResponse'  
   /event_type:
     post:
       tags:
@@ -853,8 +559,354 @@ paths:
             application/json:
               schema: 
                 $ref: '#/components/schemas/ErrorResponse'
-    
-
+  /message/thread:
+    post:
+      tags:
+        - thread
+      description: Create a new thread with name and users with no messages
+      operationId: createThread
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Thread'
+      responses:
+        '201':
+          description: Thread created successfully
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Thread'
+        '400':
+          description: Bad request
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        '500':
+          description: Internal server error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+  /message/thread/{id}:
+    post:
+      tags:
+        - thread
+      description: Add a message to an existing thread by ID
+      operationId: addMessageToThread
+      parameters:
+        - in: path
+          name: id
+          description: ID of the thread
+          required: true
+          schema:
+            type: string
+      requestBody:
+        description: Message data
+        content:
+          application/json:
+            schema:
+                $ref: '#/components/schemas/Message'
+              
+      responses:
+        '200':
+          description: Message added successfully
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Thread'
+        '400':
+          description: Bad request
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        '500':
+          description: Internal server error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'                
+    get:
+      summary: Retrieve thread by ID
+      tags:
+        - thread
+      description: Retrieve thread information by its ID
+      parameters:
+        - in: path
+          name: id
+          required: true
+          schema:
+            type: string
+          description: ID of the thread to retrieve
+      responses:
+        '200':
+          description: Successful response
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Thread'
+        '400':
+          description: Bad request
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        '404':
+          description: Thread not found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        '500':
+          description: Internal server error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+  /message/thread/userThreads/{id}:
+    get:
+      summary: Retrieve threads by user ID
+      tags:
+        - thread
+      description: Retrieve all threads that have a user ID in their group array
+      parameters:
+        - in: path
+          name: id
+          required: true
+          schema:
+            type: string
+          description: ID of the user to retrieve threads for
+      responses:
+        '200':
+          description: Successful response
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Thread'
+        '404':
+          description: No threads found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        '500':
+          description: Internal server error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'        
+  /preferences/{username}:
+    put:
+      tags:
+        - preferences
+      description: updates a user's preferences so that their theme will be the way they want every time they log in.
+      operationId: updatePreferences
+      parameters:
+        - in: path
+          name: username
+          schema:
+            type: string
+          required: true
+          description: username of the user whos preferences we are updating.
+        - in: query
+          name: changes
+          schema:
+            type: object
+          required: false
+          description: the changes that you wish to make to the current preferences.
+      responses:
+        '200':
+          description: update successful.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/SuccessResponse'
+        '400':
+          description: update failed - username required.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        '404':
+          description: update failed - invalid username.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        '500':
+          description: update failed - internal server error.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+  /usage:
+    get:
+      tags:
+        - usage
+      description: gets Cal Pal's usage statistics for developers to know more about how the app is being used.
+      operationId: getAllStats
+      responses:
+        '200':
+          description: retrieval successful.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/SuccessResponse'
+  /user:
+    post:
+      tags:
+        - user
+      description: create a new user account.
+      operationId: createUser
+      parameters:
+        - in: query
+          name: user
+          type: object
+          $ref: '#/components/schemas/User'
+      responses:
+        '201':
+          description: account creation success.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/SuccessResponse'
+        '400':
+          description: account creation failure - bad body.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        '403':
+          description: account creation failure - username already exists.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        '500':
+          description: account creation failure - internal server error.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+    delete:
+      tags:
+        - user
+      description: deletes a user from the database.
+      operationId: deleteUser
+      parameters:
+        - in: query
+          name: login
+          type: object
+          $ref: '#/components/schemas/Login'
+      responses:
+        '200':
+          description: account deletion successful.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/SuccessResponse'
+        '400':
+          description: account deletion failure - bad request.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        '401':
+          description: account deletion failure - authentication failed.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        '500':
+          description: account deletion failure - internal server error.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+    put:
+      tags:
+        - user
+      description: update the data stored with a user that already exists.
+      operationId: updateUser
+      parameters:
+        - in: query
+          name: login
+          schema:
+            $ref: '#/components/schemas/Login'
+        - in: query
+          name: changes
+          schema:
+            type: object
+          required: true
+      responses:
+        '200':
+          description: update success.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/SuccessResponse'
+        '400':
+          description: update failure - bad request.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        '401':
+          description: update failure - authentication failed.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        '500':
+          description: update failure - internal server error.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+  /user/{un}:
+    get:
+      tags:
+        - user
+      description: Search for users by username. Search is non-strict and case insenstitive ("B1G" will turn up "b1gd3vd0g").
+      operationId: searchByUsername
+      parameters:
+        - in: path
+          name: un
+          description: username of the account we are trying to authenticate.
+          schema:
+            type: string
+          required: true
+      responses:
+        '200':
+          description: authentication success
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/SuccessResponse'
+        '400':
+          description: bad request - check body parameters
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        '404':
+          description: no matches were found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        '500':
+          description: internal server error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'      
+  # External web services: (from Google)
   /weather/summary:
     get:
       tags:
@@ -906,8 +958,6 @@ paths:
             application/json:
               schema: 
                 $ref: '#/components/schemas/ErrorResponse'
-  
-
   /location/{query}:
     get:
       tags:
@@ -958,16 +1008,7 @@ paths:
             application/json:
               schema: 
                 $ref: '#/components/schemas/ErrorResponse'
-              
-                
-      
-                
-        
-
-
-
-      
-
+# Components
 components:
   schemas:
     Calendar:
