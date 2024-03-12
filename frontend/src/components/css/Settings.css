@@ -1,59 +1,59 @@
-h1,h3 {
+h1,
+h3 {
   margin-top: 20px;
 }
-  label {
-    display: block;
-    align-items: center;
-    margin-top: 10px;
-    margin-bottom: 15px; 
+label {
+  display: block;
+  align-items: center;
+  margin-top: 10px;
+  margin-bottom: 15px;
+}
 
-  }
-  
-  select,
-  input[type="color"] {
-    display: flex;
-    align-items: center;
-    width: 30%;
-    margin-top: 10px;
-    padding: 8px; 
-    font-size: 1.25rem; 
-  }
-  
-  .checkbox {
-        display:inline-block;
-        margin-top: 5px; 
-  }
+select,
+input[type='color'] {
+  display: flex;
+  align-items: center;
+  width: 30%;
+  margin-top: 10px;
+  padding: 8px;
+  font-size: 1.25rem;
+}
+
+.checkbox {
+  display: inline-block;
+  margin-top: 5px;
+}
 
 body.light-mode,
 body.dark-mode {
-    transition: background-color 0.5s;
+  transition: background-color 0.5s;
 }
 
 body.light-mode {
-    background-color: #ffffff;
-    color: #333333;
+  background-color: #ffffff;
+  color: #333333;
 }
 
 body.dark-mode {
-    background-color: #333333;
-    color: hsl(0, 23%, 94%);
+  background-color: #333333;
+  color: hsl(0, 23%, 94%);
 }
 
 .navbar-line {
-    height: 40px; 
-    width: 1px;
-    background-color: white;
-    display: inline-block;
-    margin: 0 10px; 
+  height: 40px;
+  width: 1px;
+  background-color: white;
+  display: inline-block;
+  margin: 0 10px;
 }
 
 body.light-mode h1,
 body.light-mode h3,
 body.light-mode label {
-    color: #333333; 
+  color: #333333;
 }
 
 body.dark-mode h1,
 body.dark-mode h3 {
-    color: hsl(0, 23%, 94%); 
+  color: hsl(0, 23%, 94%);
 }
