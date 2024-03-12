@@ -20,6 +20,14 @@ const WelcomeScreen = () => {
     });
   };
 
+  const goToDevLogin = () => {
+    setLoginState({
+      ...loginState,
+      action: "login",
+      developer: true
+    });
+  }
+
   return (
     <>
       <img className='welcome-logo' src={calpalLogo} />
@@ -31,6 +39,7 @@ const WelcomeScreen = () => {
         <button className="btn btn-secondary" onClick={goToCreate}>
           Create a new Account
         </button>
+        <a onClick={goToDevLogin}>Developer login</a>
       </div>
     </>
   );

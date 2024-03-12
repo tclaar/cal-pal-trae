@@ -2,7 +2,7 @@ import { useContext } from "react";
 import { LoginContext } from "./LoggedOutWrapper";
 import welcomeLogo from "../../img/calpal_logo.png";
 
-const LoginScreen = () => {
+const LoginScreen = ({ developerLogin = false }) => {
   
   const { loginState, setLoginState } = useContext(LoginContext);
 
