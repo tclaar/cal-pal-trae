@@ -203,7 +203,7 @@ paths:
         content:
           application/json:
             schema:
-              $ref: '#/components/schemas/ThreadData'
+              $ref: '#/components/schemas/Thread'
       responses:
         '201':
           description: Thread created successfully
@@ -236,14 +236,13 @@ paths:
           required: true
           schema:
             type: string
-        - in: requestBody
-          name: message
-          description: Message data
-          required: true
-          content:
-            application/json:
-              schema:
+      requestBody:
+        description: Message data
+        content:
+          application/json:
+            schema:
                 $ref: '#/components/schemas/Message'
+              
       responses:
         '200':
           description: Message added successfully
@@ -300,7 +299,7 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/ErrorResponse'
-   /message/thread/userThreads/{id}:
+  /message/thread/userThreads/{id}:
     get:
       summary: Retrieve threads by user ID
       tags:
@@ -334,29 +333,664 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/ErrorResponse'              
+  
+  
+  /calendar:
+    post:
+      tags:
+        - calendar
+      summary: Create a calendar
+      description: Adds a new calendar to the database.
+      operationId: createCalendar
+      requestBody:
+        description: Calendar object to create
+        content:
+          application/json:
+            schema:
+              type: object
+              description: an object containing the calendar to update.
+              properties:
+                calendar:
+                  type: object
+                  $ref: "#/components/schemas/Calendar"
+      responses:
+        '201':
+          description: Successful operation
+          content: 
+            application/json:
+              schema: 
+                type: object
+                description: Success boolean and the new calendar object
+                properties:
+                  success: 
+                    type: boolean
+                  calendar:
+                    type: object
+                    $ref: '#/components/schemas/Calendar'
+        '400':
+          description: Invalid input
+          content: 
+            application/json:
+              schema: 
+                $ref: '#/components/schemas/ErrorResponse'
+        '401':
+          description: Invalid user session
+          content: 
+            application/json:
+              schema: 
+                $ref: '#/components/schemas/ErrorResponse'
+        '409':
+          description: Calendar already exists
+          content: 
+            application/json:
+              schema: 
+                $ref: '#/components/schemas/ErrorResponse'
+        '500':
+          description: Internal server error
+          content: 
+            application/json:
+              schema: 
+                $ref: '#/components/schemas/ErrorResponse'
+    put:
+      tags:
+        - calendar
+      summary: Update a calendar
+      description: Updates the specified calendar in the database.
+      operationId: updateCalendar
+      requestBody:
+        description: Calendar to update with its new values
+        content:
+          application/json:
+            schema:
+              type: object
+              description: an object containing the calendar to update.
+              properties:
+                calendar:
+                  type: object
+                  $ref: "#/components/schemas/Calendar"
+      responses:
+        '200':
+          description: Successful operation
+          content: 
+            application/json:
+              schema: 
+                type: object
+                description: Success boolean and the updated calendar object
+                properties:
+                  success: 
+                    type: boolean
+                  calendar:
+                    type: object
+                    $ref: '#/components/schemas/Calendar'
+        '400':
+          description: Invalid input
+          content: 
+            application/json:
+              schema: 
+                $ref: '#/components/schemas/ErrorResponse'
+        '401':
+          description: Current user is not authorized to edit this calendar
+          content: 
+            application/json:
+              schema: 
+                $ref: '#/components/schemas/ErrorResponse'
+        '404':
+          description: Calendar does not exist
+          content: 
+            application/json:
+              schema: 
+                $ref: '#/components/schemas/ErrorResponse'
+        '500':
+          description: Internal server error
+          content: 
+            application/json:
+              schema: 
+                $ref: '#/components/schemas/ErrorResponse'
+  /calendar/{id}:
+    get:
+      summary: Get a calendar
+      tags:
+        - calendar
+      description: Retrieves a calendar by ID from the database.
+      operationId: getCalendar
+      parameters:
+        - in: path
+          name: id
+          required: true
+          schema:
+            type: string
+          description: ID of the calendar to retrieve
+      responses:
+        '200':
+          description: Successful operation
+          content: 
+            application/json:
+              schema: 
+                type: object
+                description: Success boolean and the calendar object
+                properties:
+                  success: 
+                    type: boolean
+                  calendar:
+                    type: object
+                    $ref: '#/components/schemas/Calendar'
+        '400':
+          description: Invalid input
+          content: 
+            application/json:
+              schema: 
+                $ref: '#/components/schemas/ErrorResponse'
+        '404':
+          description: Calendar does not exist
+          content: 
+            application/json:
+              schema: 
+                $ref: '#/components/schemas/ErrorResponse'
+        '500':
+          description: Internal server error
+          content: 
+            application/json:
+              schema: 
+                $ref: '#/components/schemas/ErrorResponse'
+    delete:
+      summary: Delete a calendar
+      tags:
+        - calendar
+      description: Deletes a calendar by ID from the database.
+      operationId: deleteCalendar
+      parameters:
+        - in: path
+          name: id
+          required: true
+          schema:
+            type: string
+          description: ID of the calendar to delete
+      responses:
+        '200':
+          description: Successful operation
+          content: 
+            application/json:
+              schema: 
+                type: object
+                description: Success boolean and the deleted calendar object
+                properties:
+                  success: 
+                    type: boolean
+                  calendar:
+                    type: object
+                    $ref: '#/components/schemas/Calendar'
+        '400':
+          description: Invalid input
+          content: 
+            application/json:
+              schema: 
+                $ref: '#/components/schemas/ErrorResponse'
+        '401':
+          description: Current user is not authorized to delete this calendar
+          content: 
+            application/json:
+              schema: 
+                $ref: '#/components/schemas/ErrorResponse'
+        '404':
+          description: Calendar does not exist
+          content: 
+            application/json:
+              schema: 
+                $ref: '#/components/schemas/ErrorResponse'
+        '500':
+          description: Internal server error
+          content: 
+            application/json:
+              schema: 
+                $ref: '#/components/schemas/ErrorResponse'
+  
+
+  /event:
+    post:
+      tags:
+        - event
+      summary: Create an event
+      description: Creates an event in the specified calendar.
+      operationId: createEvent
+      requestBody:
+        description: Event object to create and its calendar ID
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/EventRequestBody'
+      responses:
+        '201':
+          description: Successful operation
+          content: 
+            application/json:
+              schema: 
+                $ref: '#/components/schemas/EventSuccessResponse'  
+        '400':
+          description: Invalid input
+          content: 
+            application/json:
+              schema: 
+                $ref: '#/components/schemas/ErrorResponse'
+        '401':
+          description: Invalid user session
+          content: 
+            application/json:
+              schema: 
+                $ref: '#/components/schemas/ErrorResponse'
+        '500':
+          description: Internal server error
+          content: 
+            application/json:
+              schema: 
+                $ref: '#/components/schemas/ErrorResponse'
+    put:
+      tags:
+        - event
+      summary: Update an event
+      description: Updates an event in the specified calendar.
+      operationId: updateEvent
+      requestBody:
+        description: Event object to update and its calendar ID
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/EventRequestBody'
+      responses:
+        '200':
+          description: Successful operation
+          content: 
+            application/json:
+              schema: 
+                $ref: '#/components/schemas/EventSuccessResponse'  
+        '400':
+          description: Invalid input
+          content: 
+            application/json:
+              schema: 
+                $ref: '#/components/schemas/ErrorResponse'
+        '401':
+          description: Invalid user session
+          content: 
+            application/json:
+              schema: 
+                $ref: '#/components/schemas/ErrorResponse'
+        '409':
+          description: Event does not exist
+          content: 
+            application/json:
+              schema: 
+                $ref: '#/components/schemas/ErrorResponse'
+        '500':
+          description: Internal server error
+          content: 
+            application/json:
+              schema: 
+                $ref: '#/components/schemas/ErrorResponse'
+    delete:
+      tags:
+        - event
+      summary: Delete an event
+      description: Deletes an event in the specified calendar.
+      operationId: deleteEvent
+      requestBody:
+        description: Event object to delete and its calendar ID
+        content:
+          application/json:
+            schema:
+              type: object
+              description: event object and its calendar ID
+              properties:
+                eventId: 
+                  type: string
+                  description: the ID of the event to delete
+                calendarId: 
+                  type: string
+                  description: the ID of the event's calendar
+      responses:
+        '200':
+          description: Successful operation
+          content: 
+            application/json:
+              schema: 
+                $ref: '#/components/schemas/EventSuccessResponse'  
+        '400':
+          description: Invalid input
+          content: 
+            application/json:
+              schema: 
+                $ref: '#/components/schemas/ErrorResponse'
+        '401':
+          description: Invalid user session
+          content: 
+            application/json:
+              schema: 
+                $ref: '#/components/schemas/ErrorResponse'
+        '409':
+          description: Event does not exist
+          content: 
+            application/json:
+              schema: 
+                $ref: '#/components/schemas/ErrorResponse'
+        '500':
+          description: Internal server error
+          content: 
+            application/json:
+              schema: 
+                $ref: '#/components/schemas/ErrorResponse'
+
+    
+  /event_type:
+    post:
+      tags:
+        - event_type
+      summary: Create an event type
+      description: Adds a new event type to the database.
+      operationId: createEventType
+      requestBody:
+        description: Event type object to create
+        content:
+          application/json:
+            schema:
+              type: object
+              description: an object containing the event type to add.
+              properties:
+                event_type:
+                  type: object
+                  $ref: "#/components/schemas/EventType"
+      responses:
+        '201':
+          description: Successful operation
+          content: 
+            application/json:
+              schema: 
+                $ref: '#/components/schemas/EventTypeSuccessResponse'
+        '400':
+          description: Invalid input
+          content: 
+            application/json:
+              schema: 
+                $ref: '#/components/schemas/ErrorResponse'
+        '401':
+          description: Invalid user session
+          content: 
+            application/json:
+              schema: 
+                $ref: '#/components/schemas/ErrorResponse'
+        '500':
+          description: Internal server error
+          content: 
+            application/json:
+              schema: 
+                $ref: '#/components/schemas/ErrorResponse'
+    put:
+      tags:
+        - event_type
+      summary: Update an event type
+      description: Updates the specified event type in the database.
+      operationId: updateEventType
+      requestBody:
+        description: Event type to update with its new values
+        content:
+          application/json:
+            schema:
+              type: object
+              description: an object containing the event type to update.
+              properties:
+                event_type:
+                  type: object
+                  $ref: "#/components/schemas/EventType"
+      responses:
+        '200':
+          description: Successful operation
+          content: 
+            application/json:
+              schema: 
+                $ref: '#/components/schemas/EventTypeSuccessResponse'
+        '400':
+          description: Invalid input
+          content: 
+            application/json:
+              schema: 
+                $ref: '#/components/schemas/ErrorResponse'
+        '401':
+          description: Current user is not authorized to edit this event type
+          content: 
+            application/json:
+              schema: 
+                $ref: '#/components/schemas/ErrorResponse'
+        '404':
+          description: Event type does not exist
+          content: 
+            application/json:
+              schema: 
+                $ref: '#/components/schemas/ErrorResponse'
+        '500':
+          description: Internal server error
+          content: 
+            application/json:
+              schema: 
+                $ref: '#/components/schemas/ErrorResponse'
+  /event_type/{id}:
+    get:
+      summary: Get an event type
+      tags:
+        - event_type
+      description: Retrieves an event type by ID from the database.
+      operationId: getEventType
+      parameters:
+        - in: path
+          name: id
+          required: true
+          schema:
+            type: string
+          description: ID of the event type to retrieve
+      responses:
+        '200':
+          description: Successful operation
+          content: 
+            application/json:
+              schema: 
+                $ref: '#/components/schemas/EventTypeSuccessResponse'
+        '400':
+          description: Invalid input
+          content: 
+            application/json:
+              schema: 
+                $ref: '#/components/schemas/ErrorResponse'
+        '404':
+          description: Event type does not exist
+          content: 
+            application/json:
+              schema: 
+                $ref: '#/components/schemas/ErrorResponse'
+        '500':
+          description: Internal server error
+          content: 
+            application/json:
+              schema: 
+                $ref: '#/components/schemas/ErrorResponse'
+    delete:
+      summary: Delete an event type
+      tags:
+        - event_type
+      description: Deletes an event type by ID from the database.
+      operationId: deleteEventType
+      parameters:
+        - in: path
+          name: id
+          required: true
+          schema:
+            type: string
+          description: ID of the event type to delete
+      responses:
+        '200':
+          description: Successful operation
+          content: 
+            application/json:
+              schema: 
+                $ref: '#/components/schemas/EventTypeSuccessResponse'
+        '400':
+          description: Invalid input
+          content: 
+            application/json:
+              schema: 
+                $ref: '#/components/schemas/ErrorResponse'
+        '401':
+          description: Current user is not authorized to delete this event type
+          content: 
+            application/json:
+              schema: 
+                $ref: '#/components/schemas/ErrorResponse'
+        '404':
+          description: Event type does not exist
+          content: 
+            application/json:
+              schema: 
+                $ref: '#/components/schemas/ErrorResponse'
+        '500':
+          description: Internal server error
+          content: 
+            application/json:
+              schema: 
+                $ref: '#/components/schemas/ErrorResponse'
+    
+
+  /weather/summary:
+    get:
+      tags:
+        - weather
+      summary: "Get forecast summary"
+      description: Returns a summary of the forecast at the provided location for the specified day.
+      operationId: getWeatherSummary
+      parameters:
+        - in: header
+          name: lat
+          required: true
+          schema:
+            type: number
+          description: Latitude of the location
+        - in: header
+          name: lng
+          required: true
+          schema:
+            type: number
+          description: Longitude of the location
+        - in: header
+          name: daysahead
+          required: true
+          schema:
+            type: number
+          description: Number of days ahead of today to get the forecast for
+      responses:
+        '200':
+          description: Successful operation
+          content: 
+            application/json:
+              schema: 
+                type: object
+                description: "Summary of the forecast for the specified location/day"
+                properties:
+                  success:
+                    type: boolean
+                  summary:
+                    type: string
+        '400':
+          description: Invalid input
+          content: 
+            application/json:
+              schema: 
+                $ref: '#/components/schemas/ErrorResponse'
+        '500':
+          description: Internal server error
+          content: 
+            application/json:
+              schema: 
+                $ref: '#/components/schemas/ErrorResponse'
+  
+
+  /location/{query}:
+    get:
+      tags:
+        - location
+      summary: "Get location from query"
+      description: Gets a latitude and longitude associated with the query.
+      operationId: getLocationFromQuery
+      requestBody:
+        description: object containing the query string.
+        content:
+          application/json:
+            schema:
+              type: object
+              description: object containing the query string.
+              properties:
+                query:
+                  type: string
+      responses:
+        '200':
+          description: Successful operation
+          content: 
+            application/json:
+              schema: 
+                type: object
+                description: "Response data for the query."
+                properties:
+                  success:
+                    type: boolean
+                  lat:
+                    type: number
+                  long:
+                    type: number
+        '400':
+          description: Invalid input
+          content: 
+            application/json:
+              schema: 
+                $ref: '#/components/schemas/ErrorResponse'
+        '404':
+          description: No location found for the query
+          content: 
+            application/json:
+              schema: 
+                $ref: '#/components/schemas/ErrorResponse'
+        '500':
+          description: Internal server error
+          content: 
+            application/json:
+              schema: 
+                $ref: '#/components/schemas/ErrorResponse'
+              
+                
+      
+                
+        
+
+
+
+      
+
 components:
   schemas:
     Calendar:
       type: object
       description: a collection of events of certain types, belonging to a certain user.
       properties:
-        cal_id: 
-          type: number
+        _id: 
+          type: string
         name:
           type: string
-        owner:
-          type: number
-          description: the user_id of the owner of this calendar.
+        userId:
+          type: string
+          description: the ObjectId of the owner of this calendar.
         event_types:
           type: array
-          description: stores evt_t_ids for event types.
+          description: stores ObjectId's for event types.
           items:
-            type: number 
+            type: string
         events:
           type: array
-          description: stores ids for events.
+          description: stores ObjectId's for events.
           items:
-            type: number
+            type: string
     Date:
       type: object
       properties:
@@ -398,30 +1032,88 @@ components:
     Event:
       type: object
       properties:
+        _id: 
+          type: string
+          description: the ID of the event
         name:
           type: string
           description: the name a user defines to identify their event.
-        date:
+        type:
+          type: string
+          description: the ID of the event's type
+        start:
           type: object
+          description: start date and time
+          properties:
+            date: 
+              type: string
+              description: the start date in YYYY-MM-DD format
+            time:
+              type: string
+              description: the start time in HH:MM format (24 hour time)
+        end:
+          type: object
+          description: end date and time
+          properties:
+            date: 
+              type: string
+              description: the end date in YYYY-MM-DD format
+            time:
+              type: string
+              description: the end time in HH:MM format (24 hour time)
+        custom_fields:
+          type: object 
+          description: stores the custom fields of the event in key-value pairs
     EventField:
       type: object
       properties:
-        field_name:
+        name:
           type: string
-        data_type:
+        type:
           type: string
-        reqd:
+        required:
           type: boolean
       description: defines a field name
     EventType:
       type: object
       properties:
+        name: 
+          type: string
+        _id:
+          type: string
         fields:
           type: array
           items:
             type: object
             $ref: '#/components/schemas/EventField'
       description: defines required and optional fields for an event
+    EventRequestBody:
+      type: object
+      description: event object and its calendar ID
+      properties:
+        event: 
+          $ref: '#/components/schemas/Event'
+        calendarId: 
+          type: string
+          description: the ID of the event's calendar
+    EventSuccessResponse:
+      type: object
+      description: Success boolean and the event object
+      properties:
+        success: 
+         type: boolean
+        event:
+          type: object
+          $ref: '#/components/schemas/Event'
+    EventTypeSuccessResponse:
+      type: object
+      description: Success boolean and the event type object
+      properties:
+        success: 
+         type: boolean
+        event_type:
+          type: object
+          $ref: '#/components/schemas/EventType'
     ErrorResponse:
       type: object
       properties:

@@ -5,7 +5,7 @@ import { createContext, useContext, useEffect, useState } from 'react';
 import WelcomeScreen from './WelcomeScreen';
 import LoginScreen from './LoginScreen';
 import AccountCreationScreen from './AccountCreationScreen';
-import DevStats from './DevStats';
+import DevStats from '../logged_in/DevStats';
 import { UserContext } from '../../App';
 
 /** 
@@ -79,11 +79,22 @@ const LoggedOutWrapper = () => {
         console.log("Logging Public User Information:", obj2);
         // Update the UserContext, leading to the LoggedInWrapper to take effect.
         console.log("Updating UserContext");
+        
         if (loginState.developer) {
-          setUserState({
-            user: obj2.user,
-            developer: true
-          });
+          console.log(obj2.user)
+          if (obj2.user.developer) {
+            setUserState({
+              user: obj2.user,
+              loggedIn: true,
+              developer: true
+            });
+          } else {
+            setLoginState({
+              ...loginState,
+              feedback: "login information does not match our records."
+            });
+          }
+          
         } else {
           setUserState({
             user: obj2.user,
@@ -105,10 +116,10 @@ const LoggedOutWrapper = () => {
   
   // Determine the content to be shown on the screen.
   let content;
-  if (loginState.developer) {
+  /*if (loginState.developer) {
     // User is a developer and wants to see stats.
     content = <DevStats />
-  } else if (loginState.action === null) {
+  } else*/ if (loginState.action === null) {
     // User has not chosen what to do.
     content = <WelcomeScreen />;
   } else if (loginState.action === "login") {
