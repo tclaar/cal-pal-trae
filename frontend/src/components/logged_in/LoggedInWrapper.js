@@ -57,7 +57,17 @@ const LoggedInWrapper = () => {
       console.error("Unable to fetch calendars: " + error);
     }
   }
+  // Apply the initial theme based on the saved mode in local storage
+  const applyInitialTheme = (theme="light") => {
+    const body = document.body;
+    body.classList.add(theme+"-mode");
 
+  }
+  let theme = "";
+  if (userState.user.preferences && userState.user.preferences.theme) {
+    theme = userState.user.preferences.theme;
+  }
+  applyInitialTheme(theme);
   useEffect(() => {
     refreshCalendars();
   }, [])
