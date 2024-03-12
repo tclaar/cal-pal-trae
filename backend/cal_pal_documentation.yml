@@ -4,6 +4,7 @@ info:
   version: '1.0.0'
   title: cal-pal-api
   description: The API for CalPal, application for TCSS 460 Winter 2024
+# HTTP requests:
 paths:
   # Internally developed web services:
   /auth:
@@ -1007,16 +1008,7 @@ paths:
             application/json:
               schema: 
                 $ref: '#/components/schemas/ErrorResponse'
-              
-                
-      
-                
-        
-
-
-
-      
-
+# Components
 components:
   schemas:
     Calendar:
