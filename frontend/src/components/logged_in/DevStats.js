@@ -1,10 +1,9 @@
-
 import React, { useState, useContext, useEffect } from 'react';
 import { UserContext } from "../../App";
 import Header from "./Header";
 
 const DevStats = () => {
-  const { userState } = useContext(UserContext);
+  const { userState, setUserState } = useContext(UserContext);
 
   const [stats, setStats] = useState([]);
 
@@ -23,6 +22,10 @@ const DevStats = () => {
     }
   }
 
+  function handleExit() {
+    setUserState({ loggedIn: false });
+  }
+
   useEffect(() => {
     getStats();
   }, []);
@@ -34,6 +37,7 @@ const DevStats = () => {
         <p>Hey {userState.user.fname}!</p>
         <p>Dev Stats:</p>
         {stats.map((stat) => <p key={stat.key}>{stat.key}: {stat.counter}</p>)}
+        <button className="btn btn-outline-primary" type="button" onClick={handleExit}>Exit</button>
       </div>
 
     </>
