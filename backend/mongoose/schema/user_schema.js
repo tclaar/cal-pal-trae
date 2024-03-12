@@ -7,7 +7,8 @@ const userSchema = new Schema(
     salt: { type: String, required: true },
     email: { type: String, required: true },
     calendars: { type: [ObjectId], required: true, default: [] },
-    event_types: { type: [ObjectId], required: true, default: [] }
+    event_types: { type: [ObjectId], required: true, default: [] },
+    preferences: { type: Object, required: true, default: { theme: 'light' } }
   },
   {
     collection: 'users'
