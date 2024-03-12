@@ -19,7 +19,6 @@ const eventSchema = new Schema({
         date: { type: String, required: false, validate: validateDate },
         time: { type: String, required: false, validate: validateTime },
     },
-    location: { type: String, required: false },
     custom_fields: { type: Object, required: true },
 });
 

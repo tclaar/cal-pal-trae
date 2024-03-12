@@ -96,7 +96,7 @@ router.delete("/", async (req, res) => {
     const calendarId = req.body.calendarId;
 
     if (!await Calendar.exists({ _id: calendarId, events: { $elemMatch: { _id: eventId } }})) {
-      return res.status(400).json({ error: "An event with this ID does not exist in this calendar." });
+      return res.status(409).json({ error: "An event with this ID does not exist in this calendar." });
     }
 
     const calendar = await Calendar.findOne({ _id: calendarId });
