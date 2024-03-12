@@ -37,6 +37,7 @@ app.use("/message", require("./services/message.js"));
 app.use("/weather", require('./services/weather.js'));
 app.use("/location", require('./services/location.js'));
 app.use("/usg", require("./services/usage.js"));
+app.use('/preferences', require('./services/preferences.js'));
 
 // Start listening.
 app.listen(PORT, () => {
